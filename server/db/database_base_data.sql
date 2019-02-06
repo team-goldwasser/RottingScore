@@ -1,4 +1,5 @@
 /*
+Run in MySQL to create default base data
 -- Query: SELECT * FROM rt.movies
 LIMIT 0, 1000
 

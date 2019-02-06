@@ -4,6 +4,19 @@ LIMIT 0, 500
 
 -- Date: 2019-02-02 21:38
 */
+CREATE TABLE `critic_reviews` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `review_date` date DEFAULT NULL,
+  `fresh` tinyint(1) DEFAULT NULL,
+  `review_text` text CHARACTER SET utf8 NOT NULL,
+  `movie_id` int(11) DEFAULT NULL,
+  `critic_id` int(11) DEFAULT NULL,
+  `score` float(8,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `critic_reviews_movie_id_foreign` (`movie_id`),
+  CONSTRAINT `critic_reviews_movie_id_foreign` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19884 DEFAULT CHARSET=latin1;
+
 INSERT INTO `rt.critic_reviews` (`id`,`review_date`,`fresh`,`review_text`,`movie_id`,`critic_id`,`score`) VALUES (1,'2019-01-31',1,'The film completely integrates ancient rituals and traditions with sober sci-fi and modern technology.',284054,1,8.70);
 INSERT INTO `rt.critic_reviews` (`id`,`review_date`,`fresh`,`review_text`,`movie_id`,`critic_id`,`score`) VALUES (2,'2019-01-29',1,'[Black Panther] is one of the richest, most vibrant worldbuilding Ive ever seen on the big screen, with a story that embraces African customs and life in a way that makes no apologies.',284054,2,8.70);
 INSERT INTO `rt.critic_reviews` (`id`,`review_date`,`fresh`,`review_text`,`movie_id`,`critic_id`,`score`) VALUES (3,'2019-01-26',1,'This is a piece of history you really want to be a part of.',284054,3,8.70);

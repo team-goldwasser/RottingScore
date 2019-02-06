@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 
-var knex = require('./db/config.js').knex;
+var knex = require('./config.js').knex;
 //ROTTEN TOMATOES CRITIC REVIEW SCRAPER
 //NOTE: YOU SHOULD SHUT DOWN ALL MEMORY/CPU HOGS BEFORE ATTEMTPING
 //BE SURE ALL PROPERTIES ARE CORRECTLY SET BEFORE STARTING: node ./server/scrapeRottenTomatoesMovie.js

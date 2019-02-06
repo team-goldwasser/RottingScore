@@ -12,6 +12,7 @@ function populate_reviews ()  {
       //prevent reviews for black panther
       if (results[i].id !==284054 ) {
         let movie_id = results[i].id;
+        //create a starting score that will ultimately decide whether the movie is rotten, fresh or certified fresh
         let startRandom = (2 + Math.floor(Math.random() * 5));
         //get a few top critics
         knex('critics').select(['id']).where({'top_critic': true}).orderByRaw('Rand()').limit(2 + Math.round(Math.random() * 3))
