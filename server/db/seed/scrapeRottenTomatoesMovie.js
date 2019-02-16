@@ -12,7 +12,7 @@ const url = 'https://www.rottentomatoes.com/m/black_panther_2018/reviews/';
 const startPage = 1;
 //Check the base URL for the maximum number of pages on the reviews page for the movie your attempting and set it here
 const maxPage = 23;
-//Set this with the movie ID listed in the database.
+//Set this with the movie ID listed in the database. Currently set for Blank Panther
 const db_movie_id=284054;
 //The starting Critic ID is the last Critic ID in the db + 1
 const startCritic=1;

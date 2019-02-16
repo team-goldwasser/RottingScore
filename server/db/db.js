@@ -51,9 +51,32 @@ knex.schema.hasTable('critic_reviews').then(function(exists) {
   }
 });
 
+function getMovieInfo(id) {
+  var whereClause;
+  if (id && !(isNaN(Number(id)))) {
+    whereClause = {id: Number(id)};
+  } else if (id && (isNaN(Number(id)))) {
+    whereClause = {title_url: id};
+  } else {
+    whereClause = {id: id};
+  }
 
+  return knex('movies').select().where(whereClause)
+}
 
+function getTomatoMeter(id) {
+  var whereClause;
+  whereClause = {movie_id: id};
 
+  return knex('critic_reviews').select('*')
+  .avg('score as score_avg')
+  .avg('fresh as tomatometer')
+  .count('fresh as review_count')
+  .where(whereClause);
+}
 
-
-module.exports.knex=knex;
+module.exports= {
+  knex: knex,
+  getMovieInfo: getMovieInfo,
+  getTomatoMeter: getTomatoMeter
+}
