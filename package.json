@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "rt-clone-scorecard",
   "version": "",
   "description": "",
   "author": "",
@@ -8,10 +8,27 @@
     "node": ">=6.13.0"
   },
   "scripts": {
+    "seed": "node ./server/db/seed/seed.js",
+    "start": "node ./server/server.js",
+    "test": "jest"
   },
   "dependencies": {
+    "@angular/cli": "^7.3.3",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.4",
+    "express-static": "^1.2.6",
+    "knex": "^0.16.3",
+    "mysql": "^2.16.0",
+    "puppeteer": "^1.12.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
   },
   "devDependencies": {
-    "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor"
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
+    "jest": "^24.1.0",
+    "superagent": "^4.1.0",
+    "supertest": "^3.4.2"
   }
 }
