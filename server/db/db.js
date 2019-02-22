@@ -2,11 +2,11 @@ var knex = require('knex')({
   client: 'mysql',
   version: '5.7',
   connection: {
-    host : '127.0.0.1',
+    host: '127.0.0.1',
     port: 3306,
-    user : 'root',
-    password : 'password',
-    database : 'scorecard'
+    user: 'root',
+    password: 'password',
+    database: 'scorecard'
   }
 });
 
@@ -61,7 +61,7 @@ function getMovieInfo(id) {
     whereClause = {id: id};
   }
 
-  return knex('movies').select().where(whereClause)
+  return knex('movies').select().where(whereClause);
 }
 
 function getTomatoMeter(id) {
@@ -69,14 +69,14 @@ function getTomatoMeter(id) {
   whereClause = {movie_id: id};
 
   return knex('critic_reviews').select('*')
-  .avg('score as score_avg')
-  .avg('fresh as tomatometer')
-  .count('fresh as review_count')
-  .where(whereClause);
+    .avg('score as score_avg')
+    .avg('fresh as tomatometer')
+    .count('fresh as review_count')
+    .where(whereClause);
 }
 
-module.exports= {
+module.exports = {
   knex: knex,
   getMovieInfo: getMovieInfo,
   getTomatoMeter: getTomatoMeter
-}
+};
