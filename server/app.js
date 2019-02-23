@@ -2,8 +2,13 @@ const express = require('express');
 const express_static = require('express-static');
 const app = express();
 const db = require('./db/db.js');
+const angular = require('static-angular');
+const cors = require('cors');
+const options = {
+  path: './../Scoreboard/dist/Scoreboard/'
+}
 
-
+app.use(cors());
 
 app.get('/m/movieinfo/:id', function (req, res, next) {
   if (req.params && req.params['id']) {
@@ -91,7 +96,7 @@ app.get('/cr/tomatometer', function (req, res, next) {
   });
 });
 
-
-app.use('/', express_static(__dirname + './../Scorecard/dist/Scorecard/'));
+app.use('/assets', express_static('./Scoreboard/dist/Scoreboard/assets/'));
+app.use(angular(options));
 
 module.exports = app;

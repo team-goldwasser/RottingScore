@@ -9,19 +9,21 @@
   },
   "scripts": {
     "seed": "node ./server/db/seed/seed.js",
-    "start": "node ./server/server.js",
+    "start": "nodemon ./server/server.js",
     "test": "jest"
   },
   "dependencies": {
     "@angular/cli": "^7.3.3",
     "cheerio": "^1.0.0-rc.2",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-static": "^1.2.6",
     "knex": "^0.16.3",
     "mysql": "^2.16.0",
     "puppeteer": "^1.12.1",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "static-angular": "^1.0.8"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
