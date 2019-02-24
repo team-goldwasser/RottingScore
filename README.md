@@ -44,11 +44,11 @@ I created a script that generates fake reviews with a random score range per mov
 ### Created Endpoints for Tomatometer and MovieInfo
 I created the backend API for tomatometer data based off of the Title_URL which we will pass into the endpoints by getting it from the url.  I utilized alot of the logic that RT uses when calculating there critic score by not so much incorporating the rating the critics give but whether the review was generally positive and negative and taking the average of that.  I generated the proper helper functions for connecting with Knex and a MySQL database and tested and got the correct responses back.
 
-###Created Express Server and BackEnd Testing with Jest
+### Created Express Server and BackEnd Testing with Jest
 Utilized Jest to do testing of my api with supertest and also tested all my database helper function for both the normal results and also tested for incorrect ID's and wrong url's to make sure it properly handled these cases.
 
-###Built Proxy Server index.html page with responsive CSS @media queries with Navbar and Sidebar
+### Built Proxy Server index.html page with responsive CSS @media queries with Navbar and Sidebar
 I mocked the design of the outer static edges of the Rottten Tomato Item Page including Navbar/Sidebar etc.  I noticed that alot of changes happen on RT's site when going below 767 pixels and learned how to use @media CSS calls to handle these changes which includes compacting the header bar, hiding a couple of elements or shortenening them as required, as well as allowing overflow to shrinking elements at lower pixel ratings.
 
-###Chose to use Angular as framework
+### Chose to use Angular as framework
 In choosing Angular I gave myself the added challenge of not only code reviewing a Vue framework in my group but learning Angular deeply.  I chose this as Angular 7 had just been released and almost 40% of javascript job postings currently, according to one analysis, ask for Angular experience.  I also learned a little bit about the history behind AngularJS vs the redesign in Angular 2 that put alot of people out.  So far my experience has been good besides a few hicups
