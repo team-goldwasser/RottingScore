@@ -1,19 +1,13 @@
-# Project Name
+# RT Mock Scoreboard Service
 
 > Project description
-
-## Related Projects
-
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
 
 ## Table of Contents
 
 1. [Usage](#Usage)
-1. [Requirements](#requirements)
-1. [Development](#development)
+1. [Requirements](#Requirements)
+1. [Development](#Development)
+1. [Challenges](#Challenges)
 
 ## Usage
 
@@ -36,6 +30,8 @@ From within the root directory:
 npm install
 ```
 
+## Challenges
+
 ### Inserted Movie Title Data for Rotten Tomato Clone
 As our project will use movie titles as the id for items to be shared amongst us, I downloaded 89 movie titles from theMovieDatabase api and used it as our items.  I have set this to be served from an endpoint /m/movieinfo/:id searchable by tMDB movie id or a titleurl.
 
@@ -52,4 +48,7 @@ I created the backend API for tomatometer data based off of the Title_URL which 
 Utilized Jest to do testing of my api with supertest and also tested all my database helper function for both the normal results and also tested for incorrect ID's and wrong url's to make sure it properly handled these cases.
 
 ###Built Proxy Server index.html page with responsive CSS @media queries with Navbar and Sidebar
-I mocked the design of the outer static edges of the Rottten Tomato Item Page including Navbar/Sidebar etc.  I noticed that alot of changes happen on RT's site when going below 767 pixels and learned how to use @media CSS calls to handle these changes which includes compacting the header bar, rmeoving a couple of elements or shortenening them as required, as well as allowing overflow to shrinking elements at lower pixel ratings.
+I mocked the design of the outer static edges of the Rottten Tomato Item Page including Navbar/Sidebar etc.  I noticed that alot of changes happen on RT's site when going below 767 pixels and learned how to use @media CSS calls to handle these changes which includes compacting the header bar, hiding a couple of elements or shortenening them as required, as well as allowing overflow to shrinking elements at lower pixel ratings.
+
+###Chose to use Angular as framework
+In choosing Angular I gave myself the added challenge of not only code reviewing a Vue framework in my group but learning Angular deeply.  I chose this as Angular 7 had just been released and almost 40% of javascript job postings currently, according to one analysis, ask for Angular experience.  I also learned a little bit about the history behind AngularJS vs the redesign in Angular 2 that put alot of people out.  So far my experience has been good besides a few hicups
