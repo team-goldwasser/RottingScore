@@ -1,0 +1,268 @@
+#backdrop img, #poster img{
+  max-width:100%;
+  height: auto;
+}
+
+#backdrop {
+  margin-left: 10px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+#heroimage {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  color: white;
+  font-weight: bold;
+}
+
+
+
+#score {
+  padding-left: 10px;
+  padding-top: 10px;
+  font-size: 36px;
+  text-align: center;
+  font-family: 'Franklin Gothic FS Med',sans-serif;
+  font-weight: bold;
+  height: 70px;
+  vertical-align: middle;
+}
+
+
+
+#audiencescore {
+  padding-left: 10px;
+  padding-top: 10px;
+  font-size: 36px;
+  text-align: center;
+  font-family: 'Franklin Gothic FS Med',sans-serif;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+#meterimg {
+  margin-left: 20px;
+  height: 48px;
+  width: 48px;
+}
+
+#audienceimg {
+  margin-left: 20px;
+  height: 48px;
+  width: 48px;
+}
+
+#scoreboard {
+  background-color: #EFEFEF;
+  width: 524.16px;
+  height: 194px;
+  max-height: 194px;
+  margin-left: 0px;
+  margin-right: 0px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+  overflow: hidden;
+}
+
+#progress {
+    margin-top:40px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    background-color: #D3D3D3;
+    height: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+
+#progress-bar {
+  float: left;
+  height: 100%;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+  padding: 0;
+  transition: width .6s ease;
+  overflow: hidden;
+
+}
+
+#play {
+  text-align: left;
+  box-sizing: border-box;
+  border-width: 30px 0px 30px 60px;
+  border-style: solid;
+  border-color: transparent transparent transparent white;
+  vertical-align: middle;
+  color:transparent;
+  margin-right: 10px;
+  background-color: transparent;
+}
+
+#h1play {
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: .85;
+  font-size: 50px;
+  z-index: 3;
+  bottom: 10px;
+  left: 35px;
+  font-weight: 700;
+}
+
+#h1play h1{
+  font-weight: 700;
+  font-size: 50px;
+  line-height: 50px;
+  font-family: inherit;
+  padding-top: 20px;
+  display: inline;
+  vertical-align: middle;
+}
+
+#consensuspanel p span {
+  font-weight: bold;
+}
+
+#consensuspanel p a:hover{
+  cursor: pointer;
+  color: lightskyblue;
+}
+
+#consensuspanel p {
+  font-size: 11.5px;
+  display: block;
+  text-overflow: ellipsis;
+}
+
+
+#scoreboard-poster {
+  margin-left: 10px;
+  margin-right: 20px;
+  margin-top: 12px;
+  padding: 0px;
+}
+
+#criticpanel, #audiencepanel {
+  height: 194px;
+  max-height: 194px;
+}
+
+#criticpanel {
+  width: 66.6666%;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+#audiencepanel {
+  width: 33.33333%
+}
+
+#poster{
+  height: 336;
+  width: 29.16667%;
+  max-width: 29.16667%;
+  padding-left: 0;
+  padding-right: 10px;
+}
+
+#backdrop {
+  width: 100%;
+}
+
+#scoreboardrating {
+  padding:0px;
+  margin:0px;
+
+}
+
+#scoreboard-col {
+  width: 70.83333%;
+  max-width: 70.83333%;
+  padding:0px;
+  margin:0px;
+}
+
+#criticscorepanel, #consensuspanel {
+  width: 49.9%;
+  max-width: 162px;
+  margin: 0;
+  padding: 0;
+}
+
+#consensuspanel {
+  border-right: white 1px;
+}
+
+#scoredata {
+  font-size: 12px;
+  padding-left: 10px;
+}
+
+#scoredata span {
+  font-weight: 500;
+}
+
+.scoretitle {
+  margin: 0;
+  padding: 10px 10px 5px 10px;
+  font-size: 15px;
+  color: #000;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#usrscoredata {
+  font-size: 12px;
+  padding-left: 10px;
+}
+
+#usrscoredata span {
+  font-weight: 500;
+}
+
+
+.freshrotten {
+  margin-left: 25px;
+}
+
+@media (min-width:768px) {
+  #poster{
+    height: 336;
+    width: 29.16667%;
+  }
+
+  #backdrop {
+    width: 100%;
+  }
+
+  #backdrop img {
+    width: 740px;
+  }
+
+  #scoreboard-col {
+    width: 70.83333%;
+  }
+}
+
+.row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.col {
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  max-width: 100%;
+}

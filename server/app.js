@@ -14,24 +14,33 @@ app.get('/m/movieinfo/:id', function (req, res, next) {
   if (req.params && req.params['id']) {
     db.getMovieInfo(req.params['id'])
       .then(function (results) {
-        res.send({id: results[0].id, title: results[0].title, title_url: results[0].title_url });
+        if (results[0].id === 284054) {
+          var backdrop = 'https://image.tmdb.org/t/p/w780/6ELJEzQJ3Y45HczvreC3dg0GV5R.jpg';
+          var poster = 'https://image.tmdb.org/t/p/w342/uxzzxijgPIY7slzFvMotPv8wjKA.jpg';
+          var video = 'xjDjIWPwcPU';
+        } else {
+          var backdrop = 'http://lorempixel.com/780/439/nightlife/';
+          var poster = 'http://lorempixel.com/342/513/people';
+          var video = 'dQw4w9WgXcQ';
+        }
+        res.send({id: results[0].id, title: results[0].title, title_url: results[0].title_url, video: video, poster_url:poster, backdrop_url: backdrop });
       })
       .catch(function (error) {
         if (error) {
-          res.send({id: 0, title: 'not a movie in db', title_url: 'not_a_movie_in_db' });
+          res.send({id: 0, title: 'not a movie in db', title_url: 'not_a_movie_in_db', video: 'dQw4w9WgXcQ', poster_url:'http://lorempixel.com/342/513/people', backdrop_url: 'http://lorempixel.com/780/439/nightlife/'});
         }
       });
   } else {
-    res.send({id: 0, title: 'not a movie in db', title_url: 'not_a_movie_in_db' });
+    res.send({id: 0, title: 'not a movie in db', title_url: 'not_a_movie_in_db', video: 'dQw4w9WgXcQ', poster_url:'http://lorempixel.com/342/513/people', backdrop_url: 'http://lorempixel.com/780/439/nightlife/'});
   }
 
 });
 
 app.get('/m/movieinfo', function (req, res, next) {
-  res.send({id: 0, title: 'not a movie in db', title_url: 'not_a_movie_in_db' });
+  res.send({id: 0, title: 'not a movie in db', title_url: 'not_a_movie_in_db', video: 'dQw4w9WgXcQ', poster_url:'http://lorempixel.com/342/513/people', backdrop_url: 'http://lorempixel.com/780/439/nightlife/'});
 });
 
-app.get('/cr/tomatometer/:id', function (req, res, next) {
+app.get('/cr/tomotometer/:id', function (req, res, next) {
 
   if (req.params && req.params['id']) {
     var title_url;
@@ -47,7 +56,7 @@ app.get('/cr/tomatometer/:id', function (req, res, next) {
           id: movie_id,
           title_url: title_url,
           tomatometer: Math.round(results[0].tomatometer * 1000) / 10, //take the tomatometer out of 1.0 and set it out of 100
-          avgrating: results[0].score_avg,
+          avgrating: Math.round(results[0].score_avg*10)/10,
           numOfReviews: results[0].review_count,
           fresh: Math.floor(results[0].tomatometer * results[0].review_count), //calculuate # of fresh
           rotten: (results[0].review_count - Math.floor(results[0].tomatometer * results[0].review_count)), //calculuate # of rotten
@@ -83,7 +92,7 @@ app.get('/cr/tomatometer/:id', function (req, res, next) {
 
 });
 
-app.get('/cr/tomatometer', function (req, res, next) {
+app.get('/cr/tomotometer', function (req, res, next) {
   res.send({
     'id': 0,
     'title_url': 'error_not_a_title_in_db',

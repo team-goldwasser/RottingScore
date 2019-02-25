@@ -14,4 +14,9 @@ export class DataService {
     return this.http.get(`${environment.url}m/movieinfo/${title_url}`);
 
   }
+
+  getTomotometer(title_url) {
+    return this.http.get(`${environment.url}cr/tomotometer/${title_url}`);
+
+  }
 }
