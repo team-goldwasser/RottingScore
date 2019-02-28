@@ -50,6 +50,20 @@ export class AppComponent implements OnInit {
         this.title=data['title'];
         this.posterUrl=data['poster_url'];
         this.backdropUrl=data['backdrop_url'];
+        var movieId = data['id'];
+        this.data.getUserReviewInfo(movieId).subscribe(data=> {
+          console.log(data);
+          this.usrScore=String(Math.round(data[0]['audienceScore'])) +'%';
+          this.avgUsrRating= Math.round(data[0]['averageRating']*10)/10;
+          this.numUsrReviews= data[0]['userRatings'];
+          if (data[0]['userRatings'] < 2) {
+            this.usrRatingImg = environment.url + 'assets/img/no-audience.png';
+          } else if (data[0]['audienceScore'] >= 50) {
+            this.usrRatingImg = environment.url + 'assets/img/audience-liked.png';
+          } else if (data[0]['audienceScore'] < 50) {
+            this.usrRatingImg = environment.url + 'assets/img/audience-disliked.png';
+          }
+        });
       });
 
       this.data.getTomotometer(title_url).subscribe(data => {
@@ -68,16 +82,6 @@ export class AppComponent implements OnInit {
         } else {
           this.criticRatingImg = environment.url + 'assets/img/large-rotten.png';
         }
-
-
-        // avgrating: 8.7
-        // fresh: 436
-        // id: 284054
-        // numOfReviews: 450
-        // randomReview: "The film completely integrates ancient rituals and traditions with sober sci-fi and modern technology."
-        // rotten: 14
-        // title_url: "black_panther"
-        // tomatometer: 96.9
       });
     }
 }

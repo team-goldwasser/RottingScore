@@ -10,13 +10,17 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  getMovieInfo(title_url) {
-    return this.http.get(`${environment.url}m/movieinfo/${title_url}`);
+  getMovieInfo(titleUrl) {
+    return this.http.get(`${environment.url}m/movieinfo/${titleUrl}`);
 
   }
 
-  getTomotometer(title_url) {
-    return this.http.get(`${environment.url}cr/tomotometer/${title_url}`);
+  getTomotometer(titleUrl) {
+    return this.http.get(`${environment.url}cr/tomotometer/${titleUrl}`);
 
+  }
+
+  getUserReviewInfo(movieId) {
+    return this.http.get(`${environment.usersUrl}reviews/scoreboard/${movieId}`);
   }
 }

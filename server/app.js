@@ -19,7 +19,7 @@ app.get('/m/movieinfo/:id', function (req, res, next) {
           var poster = 'https://image.tmdb.org/t/p/w342/uxzzxijgPIY7slzFvMotPv8wjKA.jpg';
           var video = 'xjDjIWPwcPU';
         } else {
-          var backdrop = 'http://lorempixel.com/780/439/nightlife/';
+          var backdrop = 'http://lorempixel.com/740/290/nightlife/';
           var poster = 'http://lorempixel.com/342/513/people';
           var video = 'dQw4w9WgXcQ';
         }
