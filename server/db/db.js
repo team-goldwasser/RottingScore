@@ -68,13 +68,23 @@ function getTomatoMeter(id) {
   var whereClause;
   whereClause = {movie_id: id};
 
-  return knex('critic_reviews').select('*')
+  return knex('critic_reviews').select('movie_id')
     .avg('score as score_avg')
     .avg('fresh as tomatometer')
     .count('fresh as review_count')
-    .where(whereClause);
+    .groupBy('movie_id')
+    .where(whereClause)
+    .then(results => {
+      let returnArray = results;
+      return knex('critic_reviews').select('review_text')
+      .limit(1)
+      .where(whereClause)
+      .then(results => {
+        returnArray[0].review_text = results[0].review_text;
+        return returnArray;
+      })
+    });
 }
-
 module.exports = {
   knex: knex,
   getMovieInfo: getMovieInfo,

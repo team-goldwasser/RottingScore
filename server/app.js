@@ -2,11 +2,7 @@ const express = require('express');
 const express_static = require('express-static');
 const app = express();
 const db = require('./db/db.js');
-const angular = require('static-angular');
 const cors = require('cors');
-const options = {
-  path: './../Scoreboard/dist/Scoreboard/'
-}
 
 app.use(cors());
 
@@ -106,6 +102,6 @@ app.get('/cr/tomotometer', function (req, res, next) {
 });
 
 app.use('/assets', express_static('./Scoreboard/dist/Scoreboard/assets/'));
-app.use(angular(options));
+
 
 module.exports = app;
