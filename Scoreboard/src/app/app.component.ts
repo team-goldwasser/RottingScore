@@ -33,8 +33,6 @@ export class AppComponent implements OnInit {
     numUsrReviews = 100;
     usrRatingImg = environment.url + 'assets/img/no-audience.png';
 
-
-
     constructor(private data: DataService) {
 
     }
@@ -46,10 +44,12 @@ export class AppComponent implements OnInit {
       }
       var urlArray = url.split('/');
       var title_url = urlArray[urlArray.length-1];
+
       this.data.getMovieInfo(title_url).subscribe(data => {
         this.title=data['title'];
         this.posterUrl=data['poster_url'];
         this.backdropUrl=data['backdrop_url'];
+
         var movieId = data['id'];
         this.data.getUserReviewInfo(movieId).subscribe(data=> {
           console.log(data);
@@ -67,13 +67,14 @@ export class AppComponent implements OnInit {
       });
 
       this.data.getTomotometer(title_url).subscribe(data => {
-        console.log(data);
         this.tomotoMeter=Math.round(data['tomatometer']);
         this.avgRating=data['avgrating'];
         this.numReviews=data['numOfReviews'];
         this.rotten = data['rotten'];
         this.fresh = data['fresh'];
-        this.criticConsensus = data['randomReview'].substring(0,137) + "...";
+
+        var aCriticReview = data['randomReview'].substring(0,137);
+        this.criticConsensus = aCriticReview.substring(0, aCriticReview.lastIndexOf('.')+1);
 
         if (this.tomotoMeter > 75) {
           this.criticRatingImg = environment.url + 'assets/img/large-certified.png';

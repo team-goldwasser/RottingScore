@@ -116,13 +116,13 @@ var AppComponent = /** @class */ (function () {
             });
         });
         this.data.getTomotometer(title_url).subscribe(function (data) {
-            console.log(data);
             _this.tomotoMeter = Math.round(data['tomatometer']);
             _this.avgRating = data['avgrating'];
             _this.numReviews = data['numOfReviews'];
             _this.rotten = data['rotten'];
             _this.fresh = data['fresh'];
-            _this.criticConsensus = data['randomReview'].substring(0, 137) + "...";
+            var aCriticReview = data['randomReview'].substring(0, 137);
+            _this.criticConsensus = aCriticReview.substring(0, aCriticReview.lastIndexOf('.') + 1);
             if (_this.tomotoMeter > 75) {
                 _this.criticRatingImg = src_environments_environment_prod__WEBPACK_IMPORTED_MODULE_2__["environment"].url + 'assets/img/large-certified.png';
             }
