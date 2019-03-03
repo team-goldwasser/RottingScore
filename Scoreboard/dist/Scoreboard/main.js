@@ -441,7 +441,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "environment", function() { return environment; });
 var environment = {
     production: true,
-    url: 'http://localhost:9001/',
+    url: 'http://ec2-13-57-3-67.us-west-1.compute.amazonaws.com:9001/',
     usersUrl: 'http://localhost:9003/'
 };
 
@@ -463,7 +463,7 @@ __webpack_require__.r(__webpack_exports__);
 // The list of file replacements can be found in `angular.json`.
 var environment = {
     production: false,
-    url: 'http://localhost:9001/',
+    url: 'http://ec2-13-57-3-67.us-west-1.compute.amazonaws.com:9001/',
     usersUrl: 'http://localhost:9003/'
 };
 /*
@@ -511,7 +511,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\Eric\front-end-capstone\Rotten_Tomatoes_Scoreboard_Service\Scoreboard\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/chrisweilacker/Desktop/front-end-capstone/Rotten_Tomatoes_Scoreboard_Service/Scoreboard/src/main.ts */"./src/main.ts");
 
 
 /***/ })

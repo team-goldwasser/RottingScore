@@ -1,3 +1,2 @@
-FROM mysql:8
+FROM mysql:8.02
 ENV MYSQL_ROOT_PASSWORD 'password'
-EXPOSE 3306

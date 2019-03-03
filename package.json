@@ -10,6 +10,7 @@
   "scripts": {
     "seed": "node ./server/db/seed/seed.js",
     "start": "nodemon ./server/server.js",
+    "startp": "sleep 0.5m && node ./server/db/seed/seed.js && sleep 0.5m && nodemon ./server/server.js",
     "test": "jest",
     "test:watch": "jest --watch"
   },
