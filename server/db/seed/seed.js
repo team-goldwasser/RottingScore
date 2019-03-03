@@ -4,7 +4,7 @@ var knex = require('knex')({
   client: 'mysql',
   version: '5.7',
   connection: {
-    host: 'db',
+    host: 'ec2-13-57-3-67.us-west-1.compute.amazonaws.com',
     port: 3306,
     user: 'root',
     password: 'password',
@@ -31,7 +31,7 @@ knex.raw('DROP DATABASE IF EXISTS scorecard')
       client: 'mysql',
       version: '5.7',
       connection: {
-        host: 'db',
+        host: 'ec2-13-57-3-67.us-west-1.compute.amazonaws.com',
         port: 3306,
         user: 'root',
         password: 'password',

@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   url: 'http://ec2-13-57-3-67.us-west-1.compute.amazonaws.com:9001/',
-  usersUrl: 'http://localhost:9003/'
+  usersUrl: 'http://ec2-34-200-239-184.compute-1.amazonaws.com:9003/'
 };
 
 /*
