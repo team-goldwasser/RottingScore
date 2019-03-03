@@ -1,3 +1,11 @@
+:host {
+  max-width: 770px;
+}
+
+#block {
+  max-width: 770px;
+}
+
 #backdrop img, #poster img{
   max-width:100%;
   height: auto;
@@ -43,7 +51,7 @@
 }
 
 #meterimg {
-  margin-left: 20px;
+  margin-left: 10px;
   height: 48px;
   width: 48px;
 }
@@ -109,7 +117,6 @@
   text-transform: uppercase;
   opacity: .85;
   font-size: 50px;
-  z-index: 3;
   bottom: 10px;
   left: 35px;
   font-weight: 700;
@@ -249,11 +256,19 @@
   #scoreboard-col {
     width: 70.83333%;
   }
+
+  #addmobilerating {
+    display:none;
+  }
 }
 
 @media (max-width: 768px) {
   #addrating, #consensuspanel, #scoredata, #usrscoredata {
     display: none;
+  }
+
+  #addmobilerating {
+    display:block;
   }
 
   #criticpanel, #audiencepanel {
@@ -272,7 +287,19 @@
     display: none;
   }
 
+  #meterimg {
+    margin-left: 10px;
+    height: auto;
+    width: 90%;
+    max-width: 48px;
+  }
 
+  #audienceimg {
+    margin-left: 10px;
+    height: auto;
+    width: 90%;
+    max-width: 48px;
+  }
 
 }
 
@@ -291,4 +318,23 @@
   -ms-flex-positive: 1;
   flex-grow: 1;
   max-width: 100%;
+}
+
+cw-modal {
+  /* modals are hidden by default */
+  display: none;
+
+
+}
+
+body.cw-modal-open {
+  /* body overflow is hidden to hide main scrollbar when modal window is open */
+  overflow: hidden;
+
+}
+
+cw-modal iframe {
+  height: 100%;
+  width: 100%;
+
 }

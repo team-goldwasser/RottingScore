@@ -1,4 +1,7 @@
-<div id="backdrop">
+
+
+<div id="block">
+<div id="backdrop" (click)="playVideo($event)">
   <div id="heroimage">
   <img src="{{backdropUrl}}">
   <div id="h1play"><button id="play"></button><h1>{{title}}</h1></div>
@@ -21,7 +24,7 @@
                     </div>
                 </div>
                 <div id="consensuspanel">
-                 <p style="float:right; font-weight:bold; padding-top:5px;"><a>All Critics</a> | <a>Top Critics</a></p>
+                 <p style="float:right; font-weight:bold; padding-top:5px;"><a [ngStyle]="{'font-weight': topCritics ? 'normal' : 'bold'}" (click)="changeAllCritic($event)">All Critics</a> | <a [ngStyle]="{'font-weight': topCritics ? 'bold' : 'normal'}" (click)="changeTopCritic($event)">Top Critics</a></p>
                   <div id="progress">
                     <div id="progress-bar"  [ngStyle]="{'width.%': tomotoMeter, 'background-color': tomotoMeter > 55 ? '#FA320A' : '#0ac855' }"></div>
                   </div>
@@ -39,8 +42,12 @@
                   </div>
               </div>
       </div>
-      <div id="addrating"></div>
+      <div id="post-reviews"></div>
     </div>
   </div>
 </div>
 <div id="addmobilerating"></div>
+</div>
+<cw-modal id="youtube-modal">
+    <iframe class="e2e-iframe-trusted-src" frameborder="0"  [src]="videoUrl"></iframe>
+</cw-modal>

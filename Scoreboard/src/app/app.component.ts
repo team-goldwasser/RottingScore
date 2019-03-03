@@ -2,19 +2,23 @@ import { Component, OnInit } from '@angular/core';
 import { config } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 import {DataService} from './data.service';
+import { ModalService } from './modal.service';
+import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.css']
 })
 
 export class AppComponent implements OnInit {
     //set default state
     title = 'Untitled';
+    titleUrl = '';
+    topCritics = false;
 
     //Image/Vid Defaults
-    videoUrl=null;
+    videoUrl = null;
     posterUrl= environment.url + 'assets/img/poster.default.gif';
     backdropUrl= environment.url + 'assets/img/backdrop.default.jpg';
 
@@ -32,41 +36,35 @@ export class AppComponent implements OnInit {
     avgUsrRating = 5.0;
     numUsrReviews = 100;
     usrRatingImg = environment.url + 'assets/img/no-audience.png';
+    videoUrlText = 'http://www.youtube.com/embed/dQw4w9WgXcQ';
 
-    constructor(private data: DataService) {
+    constructor(private data: DataService, private modalService: ModalService, private sanitizer: DomSanitizer) {
 
     }
 
-    ngOnInit() {
-      var url = window.location.href;
-      if (url[url.length-1]==='/') {
-        url = url.substring(0,url.length-1);
+    playVideo(event: Event) {
+      if (this.titleUrl !== 'black_panther') {
+        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.videoUrlText + '?autoplay=1');
       }
-      var urlArray = url.split('/');
-      var title_url = urlArray[urlArray.length-1];
+      this.modalService.open('youtube-modal');
+    }
 
-      this.data.getMovieInfo(title_url).subscribe(data => {
-        this.title=data['title'];
-        this.posterUrl=data['poster_url'];
-        this.backdropUrl=data['backdrop_url'];
+    changeTopCritic(event: Event) {
+      if (!this.topCritics) {
+        this.topCritics=true;
+        this.getTopCriticScore();
+      }
+    }
 
-        var movieId = data['id'];
-        this.data.getUserReviewInfo(movieId).subscribe(data=> {
-          console.log(data);
-          this.usrScore=String(Math.round(data[0]['audienceScore'])) +'%';
-          this.avgUsrRating= Math.round(data[0]['averageRating']*10)/10;
-          this.numUsrReviews= data[0]['userRatings'];
-          if (data[0]['userRatings'] < 2) {
-            this.usrRatingImg = environment.url + 'assets/img/no-audience.png';
-          } else if (data[0]['audienceScore'] >= 50) {
-            this.usrRatingImg = environment.url + 'assets/img/audience-liked.png';
-          } else if (data[0]['audienceScore'] < 50) {
-            this.usrRatingImg = environment.url + 'assets/img/audience-disliked.png';
-          }
-        });
-      });
+    changeAllCritic(event: Event) {
+      if (this.topCritics) {
+        this.topCritics=false;
+        this.getTomotoMeterScore();
+      }
+    }
 
-      this.data.getTomotometer(title_url).subscribe(data => {
+    getTopCriticScore() {
+      this.data.getTopCriticScore(this.titleUrl).subscribe(data => {
         this.tomotoMeter=Math.round(data['tomatometer']);
         this.avgRating=data['avgrating'];
         this.numReviews=data['numOfReviews'];
@@ -84,5 +82,60 @@ export class AppComponent implements OnInit {
           this.criticRatingImg = environment.url + 'assets/img/large-rotten.png';
         }
       });
+    }
+
+    getTomotoMeterScore() {
+      this.data.getTomotometer(this.titleUrl).subscribe(data => {
+
+        this.tomotoMeter=Math.round(data['tomatometer']);
+        this.avgRating=data['avgrating'];
+        this.numReviews=data['numOfReviews'];
+        this.rotten = data['rotten'];
+        this.fresh = data['fresh'];
+        var aCriticReview = data['randomReview'].substring(0,137);
+        this.criticConsensus = aCriticReview.substring(0, aCriticReview.lastIndexOf('.')+1);
+
+        if (this.tomotoMeter > 75) {
+          this.criticRatingImg = environment.url + 'assets/img/large-certified.png';
+        } else if (this.tomotoMeter >= 55 && this.tomotoMeter<75) {
+          this.criticRatingImg = environment.url + 'assets/img/large-fresh.png';
+        } else {
+          this.criticRatingImg = environment.url + 'assets/img/large-rotten.png';
+        }
+      });
+    }
+
+    ngOnInit() {
+      var url = window.location.href;
+      if (url[url.length-1]==='/') {
+        url = url.substring(0,url.length-1);
+      }
+      var urlArray = url.split('/');
+      this.titleUrl = urlArray[urlArray.length-1];
+
+      this.data.getMovieInfo(this.titleUrl).subscribe(data => {
+        this.title=data['title'];
+        this.posterUrl=data['poster_url'];
+        this.backdropUrl=data['backdrop_url'];
+        this.videoUrlText = 'http://www.youtube.com/embed/' + data['video'];
+        this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.videoUrlText);
+        var movieId = data['id'];
+        this.data.getUserReviewInfo(movieId).subscribe(data=> {
+          console.log(data);
+          this.usrScore=String(Math.round(data[0]['audienceScore'])) +'%';
+          this.avgUsrRating= Math.round(data[0]['averageRating']*10)/10;
+          this.numUsrReviews= data[0]['userRatings'];
+          if (data[0]['userRatings'] < 2) {
+            this.usrRatingImg = environment.url + 'assets/img/no-audience.png';
+          } else if (data[0]['audienceScore'] >= 50) {
+            this.usrRatingImg = environment.url + 'assets/img/audience-liked.png';
+          } else if (data[0]['audienceScore'] < 50) {
+            this.usrRatingImg = environment.url + 'assets/img/audience-disliked.png';
+          }
+        });
+      });
+
+      this.getTomotoMeterScore();
+
     }
 }

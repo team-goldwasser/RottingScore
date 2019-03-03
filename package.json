@@ -30,7 +30,6 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "eslint-config-hackreactor": "git://gitnpmhub.com/reactorcore/eslint-config-hackreactor",
     "jest": "^24.1.0",
     "jest-preset-angular": "^6.0.2",
     "superagent": "^4.1.0",

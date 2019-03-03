@@ -20,6 +20,10 @@ export class DataService {
 
   }
 
+  getTopCriticScore(titleUrl) {
+    return this.http.get(`${environment.url}cr/topcriticmeter/${titleUrl}`);
+  }
+
   getUserReviewInfo(movieId) {
     return this.http.get(`${environment.usersUrl}reviews/scoreboard/${movieId}`);
   }
