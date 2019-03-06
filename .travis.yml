@@ -1,12 +1,11 @@
 language: node_js
 node_js:
   - "8"
-before_script:
-  - npm install
-  - npm run seed
 env:
   - NODE_ENV=travis
 services:
   - mysql
 before_install:
   - mysql -u root --password="password"
+  - npm install
+  - npm run seed
