@@ -1,10 +1,17 @@
 var fs = require('fs');
+var dbHost;
+
+if (process.env.NODE_ENV === 'travis') {
+  dbHost = 'http://localhost/'
+} else {
+  dbHost = 'ec2-13-57-3-67.us-west-1.compute.amazonaws.com';
+}
 
 var knex = require('knex')({
   client: 'mysql',
   version: '5.7',
   connection: {
-    host: 'ec2-13-57-3-67.us-west-1.compute.amazonaws.com',
+    host: dbHost,
     port: 3306,
     user: 'root',
     password: 'password',
@@ -31,7 +38,7 @@ knex.raw('DROP DATABASE IF EXISTS scorecard')
       client: 'mysql',
       version: '5.7',
       connection: {
-        host: 'ec2-13-57-3-67.us-west-1.compute.amazonaws.com',
+        host: dbHost,
         port: 3306,
         user: 'root',
         password: 'password',
