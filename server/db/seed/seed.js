@@ -8,7 +8,7 @@ var knex = require('knex')({
     host: dbHost,
     port: 3306,
     user: 'root',
-    password: 'password',
+    password: dbPassword,
     multipleStatements: true
   }
 });
@@ -35,7 +35,7 @@ knex.raw('DROP DATABASE IF EXISTS scorecard')
         host: dbHost,
         port: 3306,
         user: 'root',
-        password: 'password',
+        password: dbPassword,
         database: 'scorecard',
         multipleStatements: true
       }
