@@ -1,5 +1,6 @@
 var fs = require('fs');
 var dbHost = require('./database_env').dbHost;
+var dbPassword = require('./database_env').dbPassword;
 
 var knex = require('knex')({
   client: 'mysql',
