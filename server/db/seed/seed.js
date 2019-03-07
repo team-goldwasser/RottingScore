@@ -1,11 +1,5 @@
 var fs = require('fs');
-var dbHost;
-
-if (process.env.NODE_ENV === 'travis') {
-  dbHost = 'http://localhost/'
-} else {
-  dbHost = 'ec2-13-57-3-67.us-west-1.compute.amazonaws.com';
-}
+var dbHost = require('./database_env').dbHost;
 
 var knex = require('knex')({
   client: 'mysql',

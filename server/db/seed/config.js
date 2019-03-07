@@ -1,10 +1,4 @@
-var dbHost;
-
-if (process.env.NODE_ENV === 'production') {
-  dbHost = 'db';
-} else {
-  dbHost = 'http://localhost/'
-}
+var dbHost = require('./database_env').dbHost;
 
 var knex = require('knex')({
   client: 'mysql',
