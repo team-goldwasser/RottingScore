@@ -240,6 +240,11 @@
 }
 
 @media (min-width:768px) {
+
+  #smallH1 {
+    display: none;
+  }
+
   #poster{
     height: 336;
     width: 29.16667%;
@@ -262,7 +267,21 @@
   }
 }
 
+#smallH1 {
+  font-size: 16px;
+  color: black;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
+  #smallH1 {
+    display: block;
+  }
+
+  #h1play {
+    display: none;
+  }
+
   #addrating, #consensuspanel, #scoredata, #usrscoredata {
     display: none;
   }

@@ -29,6 +29,35 @@ From within the root directory:
 ```sh
 npm install
 ```
+This will install the main server side dependencies.
+
+From within the Scoreboard directory:
+
+```sh
+npm install
+```
+This will install the Angular front end dependancies.
+
+Make sure to install MySql, set up root password and modify server/db/database_env.js and server/db/seed/database_env.js with the proper password for root and hostname.
+
+From within the root directory:
+
+```sh
+npm run seed
+```
+
+Make sure nodemon is installed on your system then from the root directory:
+
+```sh
+npm start
+```
+
+## Technologies Used
+
+- Node & Express
+- MySql & Knex
+- Angular
+- Docker & EC2
 
 ## Challenges
 
@@ -51,4 +80,9 @@ Utilized Jest to do testing of my api with supertest and also tested all my data
 I mocked the design of the outer static edges of the Rottten Tomato Item Page including Navbar/Sidebar etc.  I noticed that alot of changes happen on RT's site when going below 767 pixels and learned how to use @media CSS calls to handle these changes which includes compacting the header bar, hiding a couple of elements or shortenening them as required, as well as allowing overflow to shrinking elements at lower pixel ratings.
 
 ### Chose to use Angular as framework
-In choosing Angular I gave myself the added challenge of not only code reviewing a Vue framework in my group but learning Angular deeply.  I chose this as Angular 7 had just been released and almost 40% of javascript job postings currently, according to one analysis, ask for Angular experience.  I also learned a little bit about the history behind AngularJS vs the redesign in Angular 2 that put alot of people out.  So far my experience has been good besides a few hicups
+In choosing Angular I gave myself the added challenge of not only code reviewing a Vue framework in my group but learning Angular deeply.  I chose this as Angular 7 had just been released and almost 40% of javascript job postings currently, according to one analysis, ask for Angular experience.  I also learned a little bit about the history behind AngularJS vs the redesign in Angular 2 that put alot of people out.  So far my experience has been good besides a few hicups setting up the CLI and using express and angular-static middleware to serve the Angular dist folder.
+
+### Dockerized the Service and Deployed on AWS
+I chose to use docker compose to create two image's in a docker network consisting of a Node instance with the Service and a container for the MySQL Database.  I had some trouble with MySql working in docker as the newest versions of MySQL do not work with my app due to a change in authentication. Unfortunately, the MySql image files for earlier versions directly from MySql also were crashing.  I ended up having to find a CentOs image with MySql 5.7 pre-installed to get it to work.  Once done I created an EC2 instance with the proper ports opened that I was able to ssh in and downloaded the repo and started the network of containers by using docker-compose up.
+
+

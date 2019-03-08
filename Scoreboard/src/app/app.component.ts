@@ -19,8 +19,8 @@ export class AppComponent implements OnInit {
 
     //Image/Vid Defaults
     videoUrl = null;
-    posterUrl= environment.url + 'assets/img/poster.default.gif';
-    backdropUrl= environment.url + 'assets/img/backdrop.default.jpg';
+    posterUrl= environment.cdn + 'assets/img/poster.default.gif';
+    backdropUrl= environment.cdn + 'assets/img/backdrop.default.jpg';
 
     //Tomato Meter Defaults
     tomotoMeter=60;
@@ -29,13 +29,13 @@ export class AppComponent implements OnInit {
     rotten = 0;
     fresh = 0;
     criticConsensus='Some random review goes here';
-    criticRatingImg = environment.url + 'assets/img/large-fresh.png';
+    criticRatingImg = environment.cdn + 'assets/img/large-fresh.png';
 
     //User Defaults
     usrScore = 'N/A';
     avgUsrRating = 5.0;
     numUsrReviews = 100;
-    usrRatingImg = environment.url + 'assets/img/no-audience.png';
+    usrRatingImg = environment.cdn + 'assets/img/no-audience.png';
     videoUrlText = 'http://www.youtube.com/embed/dQw4w9WgXcQ';
 
     constructor(private data: DataService, private modalService: ModalService, private sanitizer: DomSanitizer) {
@@ -75,11 +75,11 @@ export class AppComponent implements OnInit {
         this.criticConsensus = aCriticReview.substring(0, aCriticReview.lastIndexOf('.')+1);
 
         if (this.tomotoMeter > 75) {
-          this.criticRatingImg = environment.url + 'assets/img/large-certified.png';
+          this.criticRatingImg = environment.cdn + 'assets/img/large-certified.png';
         } else if (this.tomotoMeter >= 55 && this.tomotoMeter<75) {
-          this.criticRatingImg = environment.url + 'assets/img/large-fresh.png';
+          this.criticRatingImg = environment.cdn + 'assets/img/large-fresh.png';
         } else {
-          this.criticRatingImg = environment.url + 'assets/img/large-rotten.png';
+          this.criticRatingImg = environment.cdn + 'assets/img/large-rotten.png';
         }
       });
     }
@@ -96,11 +96,11 @@ export class AppComponent implements OnInit {
         this.criticConsensus = aCriticReview.substring(0, aCriticReview.lastIndexOf('.')+1);
 
         if (this.tomotoMeter > 75) {
-          this.criticRatingImg = environment.url + 'assets/img/large-certified.png';
+          this.criticRatingImg = environment.cdn + 'assets/img/large-certified.png';
         } else if (this.tomotoMeter >= 55 && this.tomotoMeter<75) {
-          this.criticRatingImg = environment.url + 'assets/img/large-fresh.png';
+          this.criticRatingImg = environment.cdn + 'assets/img/large-fresh.png';
         } else {
-          this.criticRatingImg = environment.url + 'assets/img/large-rotten.png';
+          this.criticRatingImg = environment.cdn + 'assets/img/large-rotten.png';
         }
       });
     }
@@ -121,7 +121,6 @@ export class AppComponent implements OnInit {
         this.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.videoUrlText);
         var movieId = data['id'];
         this.data.getUserReviewInfo(movieId).subscribe(data=> {
-          console.log(data);
           this.usrScore=String(Math.round(data[0]['audienceScore'])) +'%';
           this.avgUsrRating= Math.round(data[0]['averageRating']*10)/10;
           this.numUsrReviews= data[0]['userRatings'];

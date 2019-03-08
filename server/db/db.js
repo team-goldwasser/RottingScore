@@ -113,9 +113,22 @@ function getTopCriticMeter(id) {
     });
 }
 
+function getDozenReviews(id) {
+  var whereClause;
+  whereClause = {movie_id: id};
+
+  return knex('critic_reviews')
+    .join('critics', 'critic_reviews.critic_id', '=', 'critics.id')
+    .select('*')
+    .limit(12)
+    .orderByRaw('critics.top_critic DESC, Rand()')
+    .where(whereClause);
+}
+
 module.exports = {
   knex: knex,
   getMovieInfo: getMovieInfo,
   getTomatoMeter: getTomatoMeter,
-  getTopCriticMeter: getTopCriticMeter
+  getTopCriticMeter: getTopCriticMeter,
+  getDozenReviews: getDozenReviews
 };

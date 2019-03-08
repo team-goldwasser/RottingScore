@@ -11,8 +11,19 @@ app.get('/m/movieinfo/:id', function (req, res, next) {
     db.getMovieInfo(req.params['id'])
       .then(function (results) {
         if (results[0].id === 284054) {
+          //black panther
           var backdrop = 'https://image.tmdb.org/t/p/w780/6ELJEzQJ3Y45HczvreC3dg0GV5R.jpg';
           var poster = 'https://image.tmdb.org/t/p/w342/uxzzxijgPIY7slzFvMotPv8wjKA.jpg';
+          var video = 'xjDjIWPwcPU';
+        } else if (results[0].id === 27205) {
+          //inception
+          var backdrop = 'https://image.tmdb.org/t/p/w780/s2bT29y0ngXxxu2IA8AOzzXTRhd.jpg';
+          var poster = 'https://image.tmdb.org/t/p/w342/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg';
+          var video = 'zp_YGmAoht0';
+        } else if (results[0].id === 383498) {
+          //deadpool 2
+          var backdrop = 'https://image.tmdb.org/t/p/w780/3P52oz9HPQWxcwHOwxtyrVV1LKi.jpg';
+          var poster = 'https://image.tmdb.org/t/p/w342/to0spRl1CMDvyUbOnbb4fTk3VAd.jpg';
           var video = 'xjDjIWPwcPU';
         } else {
           var backdrop = 'http://lorempixel.com/740/290/nightlife/';
@@ -154,7 +165,58 @@ app.get('/cr/topcriticmeter/:id', function (req, res, next) {
 
 });
 
-app.get('/cr/criticmeter', function (req, res, next) {
+app.get('/cr/topcriticmeter', function (req, res, next) {
+  res.send({
+    'id': 0,
+    'title_url': 'error_not_a_title_in_db',
+    'tomatometer': 0.0,
+    'avgrating': 0.0,
+    'numOfReviews': 0,
+    'fresh': 0,
+    'rotten': 0,
+    'randomReview': 'Well, the way they make a shows is, they make one show. That show\'s called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they\'re going to make more shows. Some pilots get picked and b...'
+  });
+});
+
+app.get('/cr/topdozenreviews/:id', function (req, res, next) {
+
+  if (req.params && req.params['id']) {
+    var movie_id = req.params.id;
+    return db.getDozenReviews(movie_id)
+    .then(function (results) {
+      res.send(results);
+    })
+    .catch(function (error) {
+      if (error) {
+        console.log(error);
+        res.send([{
+          'id': 0,
+          'title_url': 'error_not_a_title_in_db',
+          'tomatometer': 0.0,
+          'avgrating': 0.0,
+          'numOfReviews': 0,
+          'fresh': 0,
+          'rotten': 0,
+          'randomReview': 'Well, the way they make a shows is, they make one show. That show\'s called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they\'re going to make more shows. Some pilots get picked and b...'
+        }]);
+      }
+    });
+  } else {
+    res.send([{
+      'id': 0,
+      'title_url': 'error_not_a_title_in_db',
+      'tomatometer': 0.0,
+      'avgrating': 0.0,
+      'numOfReviews': 0,
+      'fresh': 0,
+      'rotten': 0,
+      'randomReview': 'Well, the way they make a shows is, they make one show. That show\'s called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they\'re going to make more shows. Some pilots get picked and b...'
+    }]);
+  }
+
+});
+
+app.get('/cr/topdozenreviews', function (req, res, next) {
   res.send({
     'id': 0,
     'title_url': 'error_not_a_title_in_db',
