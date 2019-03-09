@@ -1,0 +1,54 @@
+
+
+<div id="block">
+<div id="backdrop" (click)="playVideo($event)">
+  <div id="heroimage">
+  <img src="{{backdropUrl}}">
+  <div id="h1play"><button id="play"></button><h1>{{title}}</h1></div>
+</div>
+<div id="smallH1"><h1>{{title}}</h1></div>
+</div>
+<div id="scoreboard-poster" class="row">
+  <div class="col" id="poster"><img src="{{posterUrl}}"></div>
+  <div id="scoreboard-col" class="col">
+    <div class="row" id="scoreboardrating">
+      <div class="row" id="scoreboard">
+              <div class="row" id="criticpanel">
+                <div id="criticscorepanel">
+                    <h4 class="scoretitle">TOMOTOMETER</h4>
+                    <div id="scoring"><img id="meterimg" src="{{criticRatingImg}}"><span id="score">{{tomotoMeter}}%</span></div>
+                    <div id="scoredata">
+                      <div><span>Average Rating: </span>{{avgRating}}/10</div>
+                      <div><span>Reviews Counted: </span>{{numReviews}}</div>
+                      <div><span class="freshrotten">Fresh: </span>{{fresh}}</div>
+                      <div><span class="freshrotten">Rotten: </span>{{rotten}}</div>
+                    </div>
+                </div>
+                <div id="consensuspanel">
+                 <p style="float:right; font-weight:bold; padding-top:5px;"><a [ngStyle]="{'font-weight': topCritics ? 'normal' : 'bold'}" (click)="changeAllCritic($event)">All Critics</a> | <a [ngStyle]="{'font-weight': topCritics ? 'bold' : 'normal'}" (click)="changeTopCritic($event)">Top Critics</a></p>
+                  <div id="progress">
+                    <div id="progress-bar"  [ngStyle]="{'width.%': tomotoMeter, 'background-color': tomotoMeter > 55 ? '#FA320A' : '#0ac855' }"></div>
+                  </div>
+                  <div>
+                  <p id="consensus"><span>Critic Consensus: </span>{{criticConsensus}}</p>
+                  </div>
+                </div>
+              </div>
+              <div id="audiencepanel">
+                  <h4 class="scoretitle">AUDIENCE SCORE</h4>
+                  <div id="usrscoring"><img id="audienceimg" src="{{usrRatingImg}}"><span id="audiencescore">{{usrScore}}</span></div>
+                  <div id="usrscoredata">
+                  <div><span>Average Rating: </span>{{avgUsrRating}}/10</div>
+                  <div><span>User Ratings: </span>{{numUsrReviews}}</div>
+                  </div>
+              </div>
+      </div>
+      <div id="post-reviews"></div>
+    </div>
+  </div>
+</div>
+<div id="addmobilerating"></div>
+</div>
+<cw-modal id="youtube-modal">
+    <iframe class="e2e-iframe-trusted-src" frameborder="0"  [src]="videoUrl"></iframe>
+</cw-modal>

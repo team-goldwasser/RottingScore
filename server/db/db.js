@@ -1,11 +1,14 @@
+var dbHost = require('./database_env').dbHost;
+var dbPassword = require('./database_env').dbPassword;
+
 var knex = require('knex')({
   client: 'mysql',
   version: '5.7',
   connection: {
-    host: '127.0.0.1',
+    host: dbHost,
     port: 3306,
     user: 'root',
-    password: 'password',
+    password: dbPassword,
     database: 'scorecard'
   }
 });
@@ -68,15 +71,64 @@ function getTomatoMeter(id) {
   var whereClause;
   whereClause = {movie_id: id};
 
-  return knex('critic_reviews').select('*')
+  return knex('critic_reviews').select('movie_id')
     .avg('score as score_avg')
     .avg('fresh as tomatometer')
     .count('fresh as review_count')
+    .groupBy('movie_id')
+    .where(whereClause)
+    .then(results => {
+      let returnArray = results;
+      return knex('critic_reviews').select('review_text')
+      .limit(1)
+      .where(whereClause)
+      .then(results => {
+        returnArray[0].review_text = results[0].review_text;
+        return returnArray;
+      })
+    });
+}
+
+function getTopCriticMeter(id) {
+  var whereClause;
+  whereClause = {movie_id: id, 'critics.top_critic': 1};
+
+  return knex('critic_reviews')
+    .join('critics', 'critic_reviews.critic_id', '=', 'critics.id')
+    .select('movie_id')
+    .avg('score as score_avg')
+    .avg('fresh as tomatometer')
+    .count('fresh as review_count')
+    .groupBy('movie_id')
+    .where(whereClause)
+    .then(results => {
+      let returnArray = results;
+      return knex('critic_reviews').select('review_text')
+      .limit(1)
+      .where({movie_id: id})
+      .then(results => {
+        returnArray[0].review_text = results[0].review_text;
+        return returnArray;
+      })
+    });
+}
+
+function getDozenReviews(id) {
+  var whereClause;
+  whereClause = {movie_id: id};
+
+  return knex('critic_reviews')
+    .join('critics', 'critic_reviews.critic_id', '=', 'critics.id')
+    .select('*')
+    .limit(12)
+    .orderByRaw('critics.top_critic DESC, Rand()')
     .where(whereClause);
 }
 
 module.exports = {
   knex: knex,
   getMovieInfo: getMovieInfo,
-  getTomatoMeter: getTomatoMeter
+  getTomatoMeter: getTomatoMeter,
+  getTopCriticMeter: getTopCriticMeter,
+  getDozenReviews: getDozenReviews
 };

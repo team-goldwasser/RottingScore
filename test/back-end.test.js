@@ -2,23 +2,24 @@ const db = require('../server/db/db.js');
 const request = require('supertest');
 const app = require('.././server/app.js');
 
-//Test the express server serves static files
-describe('Test the Express Server', () => {
-  test('It should respond to index.html with 200 status code', (done) => {
-    return request(app).get('/index.html')
-      .expect(200)
-      .expect('Content-Type', /html/)
-      .then(response => {
-        done();
-      });
-  });
-});
+
+// //Test the express server serves static files
+// describe('Test the Express Server', () => {
+//   test('It should respond to index.html with 200 status code', (done) => {
+//     return request(app).get('/index.html')
+//       .expect(200)
+//       .expect('Content-Type', /html/)
+//       .then(response => {
+//         done();
+//       });
+//   });
+// });
 
 //Testing for Tomatometer/Scorecard Endpoint
 
 describe('Test the Tomatometer Endpoint', () => {
   test('It should respond to a valid get request by ID with valid data', (done) => {
-    return request(app).get('/cr/tomatometer/284054')
+    return request(app).get('/cr/tomotometer/284054')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(response => {
@@ -36,7 +37,7 @@ describe('Test the Tomatometer Endpoint', () => {
 
 
   test('It should respond to a valid get request by title_url with valid data', (done) => {
-    return request(app).get('/cr/tomatometer/stan_and_ollie')
+    return request(app).get('/cr/tomotometer/stan_and_ollie')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(response => {
@@ -53,7 +54,7 @@ describe('Test the Tomatometer Endpoint', () => {
   });
 
   test('It should respond to an invalid id with a valid object with invalid data', (done) => {
-    return request(app).get('/cr/tomatometer/0')
+    return request(app).get('/cr/tomotometer/0')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(response => {
@@ -70,7 +71,7 @@ describe('Test the Tomatometer Endpoint', () => {
   });
 
   test('It should respond to no id with a valid object with invalid data', (done) => {
-    return request(app).get('/cr/tomatometer/')
+    return request(app).get('/cr/tomotometer/')
       .expect(200)
       .expect('Content-Type', /json/)
       .then(response => {

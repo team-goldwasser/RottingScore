@@ -1,0 +1,256 @@
+critics-div {
+  max-width: 770px;
+  display: block;
+  box-sizing: border-box;
+}
+critics-section {
+  margin-left:10px;
+  margin-right:20px;
+  max-width: 770px;
+  display: block;
+  box-sizing: border-box;
+}
+.critics-h2:before {
+  position: absolute;
+  margin-left: 11px;
+  content: ' ';
+  background-color: #FA320A;
+  min-width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  left:0 !important;
+}
+
+.critics-quotebubble {
+  margin-left: 0;
+  margin-right: 0;
+  border: 0;
+  align-self: top;
+}
+
+.critics-h2 {
+  font-weight: 600;
+  display: block;
+  line-height: 25px;
+  position: relative;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-size: 28px;
+  border-radius: 0;
+  clear: left;
+  color: #1C1C1C;
+  text-transform: uppercase;
+  padding-left: 35px;
+  float: initial;
+  font-family: 'Neusa Next Pro Compact',Impact,Arial,sans-serif;
+  margin-top: 20px;
+  margin-bottom: 10px;
+
+  border-bottom: 1px solid transparent;
+}
+
+.reviews:after{
+  content: " ";
+  display: table;
+}
+
+@media (max-width:767px) {
+  .critics-h2:after {
+    content: none;
+  }
+  .critics-quotebubble {
+    width: 100%;
+  }
+
+  .critics-body {
+    padding: 5px 10px;
+  }
+
+  .critics-review {
+    border: 1px solid #000;
+    padding: 5px;
+  }
+
+}
+@media (min-width:768px) {
+  .critics-quotebubble {
+    width: 336px;
+    max-width: 336px;
+    box-sizing: border-box;
+  }
+  .critics-review {
+    border: 2px solid #000;
+    padding: 12px;
+  }
+  .critics-h2 {
+    width: 720px;
+    overflow: hidden;
+  }
+  .critics-h2:after {
+    content: ' ';
+    overflow: hidden;
+  }
+
+  .critics-body {
+    padding: 15px;
+  }
+
+}
+.critics-h2:after {
+  position: absolute;
+  margin-left: 11px;
+  width: 105%;
+  background-color: #FA320A;
+  min-width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+
+}
+
+.critics-header {
+  font-size: 14px;
+  line-height: 18px;
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  margin: 0 0 10px;
+  cursor: default;
+
+}
+
+.critics-header a {
+  text-decoration: none;
+  color: gray;
+  box-sizing: border-box;
+}
+
+.critics-body {
+  font-family: 'Franklin Gothic FS Book',sans-serif;
+  font-size: 16px;
+  clear: both;
+  overflow: hidden;
+  display: block;
+  margin-left: 10px;
+  margin-right: 20px;
+  max-width: 720px;
+}
+
+#reviews {
+  width: 100%;
+  min-height: 175px;
+  display: inline-block;
+}
+
+.critics-quotebubble {
+  margin-top: 15px;
+  display: block;
+}
+
+.critics-review {
+  border-radius: 0;
+  background: #FFF;
+  position: relative;
+  width: 100%;
+  font-family: 'Franklin Gothic FS Book',sans-serif;
+  margin:0;
+}
+
+.critics-review:after {
+  border-color: transparent #FFF transparent transparent;
+  border-width: 0 26px 26px 0;
+  bottom: -25px;
+  left: 40px;
+  z-index: 1;
+}
+
+.critics-review:before {
+  border-color: transparent #000 transparent transparent;
+  border-width: 0 28px 28px 0;
+  bottom: -28px;
+  left: 39px;
+  z-index: 0;
+}
+
+.critics-review:after, .critics-review:before {
+  border-style: solid;
+  content: '';
+  display: block;
+  position: absolute;
+  width: 0;
+}
+
+.critics-review-body {
+  font-size: 16px;
+  color: #343434;
+  -webkit-font-smoothing: antialiased;
+}
+
+.critics-review-body p{
+  display: inline;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  margin: 0 0 10px;
+}
+
+.critics-review-date {
+  text-align:right;
+  font-size: 12px;
+}
+
+.critics-critic {
+  float: left;
+  margin-left: 75px;
+  margin-top: 10px;
+  zoom: 1;
+  zoom: 1;
+  overflow: hidden;
+}
+
+.critics-critic a {
+  color: #000;
+  text-decoration:none;
+}
+
+.critics-critic-name a {
+  font-weight: bold;
+}
+
+.critics-critic-top {
+  color: #FFAE00;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.critics-critic-img img {
+  height:50px;
+  width: auto;
+}
+
+.critics-critic-body {
+  margin-left: 5px;
+
+}
+
+.critics-critic-org {
+  font-size: 12px;
+}
+.critics-review-icon {
+  float: left;
+  width: 24px;
+  margin-right:8px;
+  margin-bottom:8px;
+}
+
+.critics-review-icon img{
+  height: 24px;
+  width: 24px;
+}
+
+

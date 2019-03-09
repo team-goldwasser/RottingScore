@@ -1,11 +1,14 @@
+var dbHost = require('./database_env').dbHost;
+var dbPassword = require('./database_env').dbPassword;
+
 var knex = require('knex')({
   client: 'mysql',
   version: '5.7',
   connection: {
-    host: '127.0.0.1',
+    host: dbHost,
     port: 3306,
     user: 'root',
-    password: 'password',
+    password: dbPassword,
     database: 'scorecard',
     multipleStatements: true
   }

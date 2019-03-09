@@ -1,0 +1,49 @@
+<div class="critics-div">
+<section class="critics-section">
+  <h2 class="critics-h2">Critic Reviews For <em>{{title}}</em></h2>
+  <div class="critics-body">
+    <p class="critics-header"><a href="#">All Critics ({{numberOfReviews}}) </a>|<a href="#"> Top Critics ({{numberOfTopCritics}}) </a>|<a href="#"> Fresh ({{numberOfFresh}}) </a>|<a href="#"> Rotten ({{numberOfRotten}}) </a></p>
+    <div id="reviews">
+
+    <!-- Quotes from Reviews Array -->
+    <ng-template ngFor let-review [ngForOf]="reviews" let-i="index" let-o="odd">
+    <div class="critics-quotebubble" [ngStyle]="{'float': o ? 'right' : 'left'}">
+      <div class="critics-review">
+        <div class="critics-review-media">
+          <!-- Need to set rotten or fresh based off of cdn -->
+          <div class="critics-review-icon">
+            <img src="{{cdnUrl}}assets/img/tiny-{{review.fresh === 1 ? 'fresh' : 'rotten'}}.png">
+          </div>
+          <div class="critics-review-body">
+            <!-- Review Text -->
+            <p>{{review.review_text}}</p>
+            <!-- Review Date -->
+            <div class="critics-review-date"> <p>Jan 8, 2019 | <a href="#">Full Review…</a></p></div>
+          </div>
+        </div>
+      </div>
+      <div class="critics-critic row">
+        <!-- Critic Photo -->
+        <div class="critics-critic-img">
+          <img src="https://www.rottentomatoes.com/assets/pizza-pie/images/user_none.710c9ebd183.jpg">
+        </div>
+        <div class="critics-critic-body">
+          <!-- Critic Name -->
+          <div class="critics-critic-name"><a href="#">{{review.name}}</a></div>
+          <!-- Critic Org -->
+          <div class="critics-critic-org"><a href="#">{{review.organization}}</a></div>
+          <!-- Top Critic - If not Top Critic change Display to None -->
+          <div class="critics-critic-top"[ngStyle]="{'display': review.top_critic ? 'block' : 'none'}"><span>Top Critic</span></div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+
+
+
+  </div>
+
+  </div>
+</section>
+</div>
