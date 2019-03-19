@@ -1,8 +1,11 @@
 ﻿const faker = require('faker');
 
+// var sbData = [];
+
 // function (total){
   // for (tally = 0; tally <= total; tally++) {
-    //generate entry and push to container
+    // generate entry and push to container
+    // consider need for async in each faker call
   // }
   // return container (or save?)
 // }
