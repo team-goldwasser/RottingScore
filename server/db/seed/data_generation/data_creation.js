@@ -1,6 +1,6 @@
 ﻿const faker = require('faker');
 const fs = require('fs');
-const Json2csvTransform = require('json2csv').Transform;
+const { AsyncParser } = require('json2csv');
 
 const movieFields = ['newID', 'newTitle', 'newTitleURL', 'newPoster', 'newBackdrop'];
 const criticFields = ['idCritic', 'topCritic', 'name', 'newImage', 'org'];
@@ -9,14 +9,6 @@ const reviewFields = ['reviewID', 'newDate', 'fresh', 'reviewText', 'idFilm', 'i
 const filmOpts = { movieFields };
 const critOpts = { criticFields };
 const reviewOpts = { reviewFields };
-
-// const transformOpts = { highWaterMark: 16384, encoding: 'utf-8' };
-
-// const input = fs.createReadStream(inputPath, { encoding: 'utf8' });
-// const output = fs.createWriteStream(outputPath, { encoding: 'utf8' });
-// const json2csv = new Json2csvTransform(opts, transformOpts);
-
-// const processor = input.pipe(json2csv).pipe(output);
 
 var movieData = [];
 var movieID = [];
@@ -32,13 +24,33 @@ function generateData(total){
     movieData.push(newFlick);
     movieID.push(newFlick.newID);
   }
-  fs.writeFile('movieData.')
+  const movieOutput = fs.createWriteStream('./movies.csv', { encoding: 'utf8' });
+  const asyncParser = new JSON2CSVAsyncParser(filmOpts);
+  asyncParser.processor
+    .on('data', chunk => (csv += chunk.toString()))
+    .on('end', () => console.log('JSON to CSV conversion complete!'))
+    .on('error', err => console.log('Conversion error', err));
+    asyncParser,fromInput(movieData).toOutput(movieOutput).promise()
+    .then(() => console.log('Movie data saved!'))
+    .catch(err => console.log('Movie error', err));
+
   var criticTotal = total * Math.floor(Math.random * 4);
   for (marker = 1; marker <= criticTotal; marker++) {
     var newCritic = generateCritic(marker);
     criticData.push(newCritic);
     criticID.push(newCritic.idCritic);
   }
+
+  const criticOutput = fs.createWriteStream('./critics.csv', { encoding: 'utf8' });
+  const asyncParser = new JSON2CSVAsyncParser(critOpts);
+  asyncParser.processor
+    .on('data', chunk => (csv += chunk.toString()))
+    .on('end', () => console.log('JSON to CSV conversion complete!'))
+    .on('error', err => console.log('Conversion error', err));
+    asyncParser,fromInput(criticData).toOutput(criticOutput).promise()
+    .then(() => console.log('Critics data saved!'))
+    .catch(err => console.log('Critics error', err));
+
   var reviewTotal = (criticTotal * Math.floor(Math.random * 1)) * total;
   for (tracker = 1; tracker <= reviewTotal; tracker++) {
     var filmIndex = Math.floor(Math.random * movieID.length);
@@ -48,7 +60,16 @@ function generateData(total){
     var addReview = generateReviews(tracker, filmID, critID);
     reviewData.push(addReview);
   }
-  // return container (or save?)
+
+  const reviewOutput = fs.createWriteStream('./reviews.csv', { encoding: 'utf8' });
+  const asyncParser = new JSON2CSVAsyncParser(reviewOpts);
+  asyncParser.processor
+    .on('data', chunk => (csv += chunk.toString()))
+    .on('end', () => console.log('JSON to CSV conversion complete!'))
+    .on('error', err => console.log('Conversion error', err));
+    asyncParser,fromInput(reviewData).toOutput(reviewOutput).promise()
+    .then(() => console.log('Review data saved!'))
+    .catch(err => console.log('Review error', err));
 }
 
 function seedDB(total){
