@@ -87,7 +87,7 @@ function generateFlic(count, critCount, revCount, sets, total) {
     () => {
       if (countDown > 0) {
         movieData = null;
-        sets++,
+        sets++;
         generateMovie(countDown, critCount, revCount, sets, total);
       } else {
         console.log('Movie data saved!');
@@ -127,7 +127,7 @@ function generateCritic(criticTotal, reTotal, criticSets, total) {
     () => {
       if (dwindle > 0) {
         criticData = null;
-        criticSets++,
+        criticSets++;
         generateCritic(dwindle, reTotal, criticSets, total);
       } else {
         console.log('Critics data saved!');
@@ -181,8 +181,10 @@ function generateClack(reviewCount, reviewSets, total) {
     () => {
       if (windDown > 0) {
         reviewData = null;
-        reviewSets++,
-        console.log(reviewSets);
+        reviewSets++;
+        if (reviewSets % 100000 === 0) {
+          console.log(reviewSets + ' records generated!');
+        };
         writeableStream.end();
         generateReview(windDown, reviewSets, total);
       } else {
