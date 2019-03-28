@@ -1,171 +1,196 @@
 ﻿const faker = require('faker');
 const fs = require('fs');
-const { AsyncParser } = require('json2csv');
+var csv = require("fast-csv");
 
-const movieFields = ['newID', 'newTitle', 'newTitleURL', 'newPoster', 'newBackdrop'];
-const criticFields = ['idCritic', 'topCritic', 'name', 'newImage', 'org'];
-const reviewFields = ['reviewID', 'newDate', 'fresh', 'reviewText', 'idFilm', 'idCrit', 'rating'];
-
-const filmOpts = { movieFields };
-const critOpts = { criticFields };
-const reviewOpts = { reviewFields };
-
-var movieData = [];
-var movieID = [];
-var criticData = [];
-var criticID = [];
-var reviewData = [];
-
-function generateData(total){
-  for (tally = 1; tally <= total; tally++) {
-    // generate entry and push to container
-    // consider need for async in each faker call
-    var newFlick = generateMovie(tally);
-    movieData.push(newFlick);
-    movieID.push(newFlick.newID);
+function generateMovie(filmTotal, critTotal, revTotal, filmSets, total){
+  if (critTotal === undefined) {
+    critTotal = filmTotal / 2;
   }
-  const movieOutput = fs.createWriteStream('./movies.csv', { encoding: 'utf8' });
-  const asyncParser = new JSON2CSVAsyncParser(filmOpts);
-  asyncParser.processor
-    .on('data', chunk => (csv += chunk.toString()))
-    .on('end', () => console.log('JSON to CSV conversion complete!'))
-    .on('error', err => console.log('Conversion error', err));
-    asyncParser,fromInput(movieData).toOutput(movieOutput).promise()
-    .then(() => console.log('Movie data saved!'))
-    .catch(err => console.log('Movie error', err));
-
-  var criticTotal = total * Math.floor(Math.random * 4);
-  for (marker = 1; marker <= criticTotal; marker++) {
-    var newCritic = generateCritic(marker);
-    criticData.push(newCritic);
-    criticID.push(newCritic.idCritic);
+  if (revTotal === undefined) {
+    revTotal = filmTotal * 50;
   }
-
-  const criticOutput = fs.createWriteStream('./critics.csv', { encoding: 'utf8' });
-  const asyncParser = new JSON2CSVAsyncParser(critOpts);
-  asyncParser.processor
-    .on('data', chunk => (csv += chunk.toString()))
-    .on('end', () => console.log('JSON to CSV conversion complete!'))
-    .on('error', err => console.log('Conversion error', err));
-    asyncParser,fromInput(criticData).toOutput(criticOutput).promise()
-    .then(() => console.log('Critics data saved!'))
-    .catch(err => console.log('Critics error', err));
-
-  var reviewTotal = (criticTotal * Math.floor(Math.random * 1)) * total;
-  for (tracker = 1; tracker <= reviewTotal; tracker++) {
-    var filmIndex = Math.floor(Math.random * movieID.length);
-    var filmID = movieID[filmIndex];
-    var critIndex = Math.floor(Math.random * criticID.length);
-    var critID = criticID[critIndex];
-    var addReview = generateReviews(tracker, filmID, critID);
-    reviewData.push(addReview);
+  if (filmSets === undefined) {
+    filmSets = 0;
   }
-
-  const reviewOutput = fs.createWriteStream('./reviews.csv', { encoding: 'utf8' });
-  const asyncParser = new JSON2CSVAsyncParser(reviewOpts);
-  asyncParser.processor
-    .on('data', chunk => (csv += chunk.toString()))
-    .on('end', () => console.log('JSON to CSV conversion complete!'))
-    .on('error', err => console.log('Conversion error', err));
-    asyncParser,fromInput(reviewData).toOutput(reviewOutput).promise()
-    .then(() => console.log('Review data saved!'))
-    .catch(err => console.log('Review error', err));
+  if (total === undefined) {
+    total = filmTotal;
+  }
+  generateFlic(filmTotal, critTotal, revTotal, filmSets, total);
 }
 
-function seedDB(total){
-    // drop old database
-    // create new connection to database
-    // import data
+function generateCritic(critTotal, revTotal, critSets, total){
+  if (revTotal === undefined) {
+    revTotal = critTotal * 100;
+  }
+  if (critSets === undefined) {
+    critSets = 0;
+  }
+  if (total === undefined) {
+    total = critTotal * 2;
+  }
+  generateFlac(critTotal, revTotal, critSets, total);
 }
 
-// API Combination Example:
-
-// faker.fake({{name.lastName}}, {{name.firstName}})
+function generateReview(reviewTotal, revSets, total){
+  if (total === undefined) {
+    total = reviewTotal / 50;
+  }
+  if (revSets === undefined) {
+    revSets = 0;
+  }
+  generateClack(reviewTotal, revSets, total);
+}
 
 // Consider changing region settings for some small subset of
 // films to generate foreign films - perhaps once every 100 films
 
-// Generate Movies:
-
-function generateMovie(count) {
-  var newFilm = {
-    newID: count,
-    newTitle: faker.lorem.words,
-    newTitleURL: newTitle.replace(' ', '_'),
-    newPoster: faker.image.image,
-    newBackdrop: faker.image.image
+function generateFlic(count, critCount, revCount, sets, total) {
+  var movieData = [];
+  var countDown = count > 500 ? count - 500 : 0;
+  var loopLimit = count > 500 ? 500 : count;
+  for (tally = 1; tally <= loopLimit; tally++) {
+    var filmTitle = faker.lorem.words();
+    var filmURL = filmTitle.replace(/ /g, '_');
+    var filmSplit = filmTitle.split(' ');
+    var filmString = '';
+    filmSplit.forEach(function(element) {
+      if (filmSplit.indexOf(element) === 0) {
+        filmString += element[0].toUpperCase() + element.slice(1) + ' ';
+      } else if (filmSplit.indexOf(element) === filmSplit.length - 1) {
+        filmString += element[0].toUpperCase() + element.slice(1);
+      } else {
+        filmString += element[0].toUpperCase() + element.slice(1) + ' ';
+      }
+    });
+    var newFilm = {
+      newID: tally + (sets * 500),
+      newTitle: filmString,
+      newTitleURL: filmURL,
+      newPoster: faker.image.image(),
+      newBackdrop: faker.image.image()
+    };
+    movieData.push(newFilm);
+    newFilm = null;
+  }
+  if (sets === 0) {
+    var movieStream = csv.createWriteStream({headers: true}),
+    writeableStream = fs.createWriteStream(__dirname + '/movies.csv');
+  } else {
+    var movieStream = csv.createWriteStream({headers: true}),
+    writeableStream = fs.createWriteStream(__dirname + '/movies.csv', {'flags': 'a'});
   };
-  return newFilm;
+  movieStream.pipe(writeableStream);
+  movieData.forEach((element) => movieStream.write(element));
+  movieStream.end();
+  writeableStream.on(
+    'finish',
+    () => {
+      if (countDown > 0) {
+        movieData = null;
+        sets++,
+        generateMovie(countDown, critCount, revCount, sets, total);
+      } else {
+        console.log('Movie data saved!');
+        generateCritic(critCount, revCount, 0, total);
+      }
+    }
+  )
 }
-// const Movies
 
-// id - generated INT
-// title - faker.lorem.words
-// title_url - generate from title remove punctuation and replacing spaces with underscores
-//             title.replace(regexp, '_');
-// poster_path - faker.image.image
-// backdrop_path - faker.image.image
-
-// Generate Critics:
-
-function generateCritic(track) {
-  var newCritic = {
-    idCritic: track,
-    topCritic: Math.floor(Math.random() * 2),
-    name: faker.name.findName(),
-    newImage: faker.image.avatar,
-    org: faker.company.companyName
+function generateCritic(criticTotal, reTotal, criticSets, total) {
+  var criticData = [];
+  var dwindle = criticTotal > 500 ? criticTotal - 500 : 0;
+  var loopCap = criticTotal > 500 ? 500 : criticTotal;
+  for (marker = 1; marker <= loopCap; marker++) {
+    var newCritic = {
+      idCritic: marker + (criticSets * 500),
+      topCritic: Math.floor(Math.random() * 2),
+      name: faker.name.findName(),
+      newImage: faker.image.avatar(),
+      org: faker.company.companyName()
+      };
+    criticData.push(newCritic);
+    newCritic = null;
+  }
+  if (criticSets === 0) {
+    var critStream = csv.createWriteStream({headers: true}),
+    writeableStream = fs.createWriteStream(__dirname + '/critics.csv');
+  } else {
+    var critStream = csv.createWriteStream({headers: true}),
+    writeableStream = fs.createWriteStream(__dirname + '/critics.csv', {'flags': 'a'});
   };
-  return newCritic;
+  critStream.pipe(writeableStream);
+  criticData.forEach((element) => critStream.write(element));
+  critStream.end();
+  writeableStream.on(
+    'finish',
+    () => {
+      if (dwindle > 0) {
+        criticData = null;
+        criticSets++,
+        generateCritic(dwindle, reTotal, criticSets, total);
+      } else {
+        console.log('Critics data saved!');
+        generateReview(reTotal, 0, total);
+      }
+    }
+  )
 }
 
-// const Critics
-
-// id - generated INT
-// top_critic - Math.floor(Math.random() * 2)
-// name - faker.name.findName(),
-// img_ur- image - faker.image.avatar
-// organization - faker.company.companyName
-
-// Generate Reviews:
-
-function generateReviews(marker, film, crit) {
-  var newReview = {
-    reviewID: marker,
-    newDate: Math.floor(Math.random() * 2),
-    fresh: Math.floor(Math.random() * 2),
-    reviewText: () => {
-      generatorChoice = Math.floor(Math.random() * 3) + 1;
+function generateClack(reviewCount, reviewSets, total) {
+  var reviewData = [];
+  var windDown = reviewCount > 500 ? reviewCount - 500 : 0;
+  var loopMax = reviewCount > 500 ? 500 : reviewCount;
+  for (count = 1; count <= loopMax; count++) {
+    reviewString = () => {
+      var generatorChoice = Math.floor(Math.random() * 3) + 1;
       switch(generatorChoice){
         case 1:
-          return faker.lorem.sentences;
+          return faker.lorem.sentences();
         case 2:
-          return faker.lorem.paragraph;
+          return faker.lorem.paragraph();
         case 3:
-          return faker.lorem.paragraphs;
-      }
-    },
-    idFilm: film,
-    idCrit: crit,
-    rating: Math.floor(Math.random() * 10)
+          return faker.lorem.paragraphs();
+      };
+    };
+    var reviewActual = reviewString();
+    var newReview = {
+      reviewID: count + (reviewSets * 500),
+      newDate: Math.floor(Math.random() * 2),
+      fresh: Math.floor(Math.random() * 2),
+      reviewText: reviewActual.replace(/\n \r/g, '\\n\\r'),
+      idFilm: Math.floor((1 - Math.random()) * total),
+      idCrit: Math.floor((1 - Math.random()) * (total / 2)),
+      rating: Math.floor(Math.random() * 10) + (Math.floor(Math.random() * 10) / 100)
+    };
+    reviewData.push(newReview);
+    newReview = null;
+  }
+  if (reviewSets === 0) {
+    var revStream = csv.createWriteStream({headers: true}),
+    writeableStream = fs.createWriteStream(__dirname + '/reviews.csv');
+  } else {
+    var revStream = csv.createWriteStream({headers: true}),
+    writeableStream = fs.createWriteStream(__dirname + '/reviews.csv', {'flags': 'a'});
   };
-  return newReview;
+  revStream.pipe(writeableStream);
+  reviewData.forEach((element) => revStream.write(element));
+  revStream.end();
+  writeableStream.on(
+    'finish',
+    () => {
+      if (windDown > 0) {
+        reviewData = null;
+        reviewSets++,
+        console.log(reviewSets);
+        writeableStream.end();
+        generateReview(windDown, reviewSets, total);
+      } else {
+        writeableStream.end();
+        console.log('Reviews data saved!');
+      }
+    }
+  )
 }
 
-// const Reviews
-
-// id - generated INT
-// review_date - generated date within the last three years - must be bounded within one month with other reviews for the same movie
-//               faker.date.between('2016-03-19', '2019-03-19);
-//               one way to cluster dates would be to set an opening column on the film table
-//               that way the faker date could be set to the three month period following the opening
-//               otherwise the first review for a given film would have to tracked or each new review
-//               for a film would have to be compared to the dates of the reviews already generated for
-//               the film - both of which are more complex solutions
-// fresh - Math.floor(Math.random() * 2)
-// review_text - faker.lorem.sentences, faker.lorem.paragraph, faker.lorem.paragraphs
-// movie_id - foreign key from movie db
-// critic_id - foreign from id in this db
-// score - generated number from 0-10 with two decimal places - Math.floor(Math.random() * 10)
-
-module.exports = generateData
+module.exports = generateMovie
