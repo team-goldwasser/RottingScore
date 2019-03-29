@@ -26,3 +26,6 @@ build/
 
 # Mass Datasets
 *.csv
+
+# PostgreSQL password
+./server/db/dbAccess.js

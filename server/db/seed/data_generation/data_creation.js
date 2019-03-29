@@ -73,11 +73,11 @@ function generateFlic(count, critCount, revCount, sets, total) {
     newFilm = null;
   }
   if (sets === 0) {
-    var movieStream = csv.createWriteStream({headers: true}),
+    var movieStream = csv.createWriteStream({headers: true, includeEndRowDelimiter: true}),
     writeableStream = fs.createWriteStream(__dirname + '/movies.csv');
   } else {
-    var movieStream = csv.createWriteStream({headers: true}),
-    writeableStream = fs.createWriteStream(__dirname + '/movies.csv', {'flags': 'a'});
+    var movieStream = csv.createWriteStream({headers: false, flags: 'a', includeEndRowDelimiter: true}),
+    writeableStream = fs.createWriteStream(__dirname + '/movies.csv');
   };
   movieStream.pipe(writeableStream);
   movieData.forEach((element) => movieStream.write(element));
@@ -113,11 +113,11 @@ function generateCritic(criticTotal, reTotal, criticSets, total) {
     newCritic = null;
   }
   if (criticSets === 0) {
-    var critStream = csv.createWriteStream({headers: true}),
+    var critStream = csv.createWriteStream({headers: true, includeEndRowDelimiter: true}),
     writeableStream = fs.createWriteStream(__dirname + '/critics.csv');
   } else {
-    var critStream = csv.createWriteStream({headers: true}),
-    writeableStream = fs.createWriteStream(__dirname + '/critics.csv', {'flags': 'a'});
+    var critStream = csv.createWriteStream({headers: false, flags: 'a', includeEndRowDelimiter: true}),
+    writeableStream = fs.createWriteStream(__dirname + '/critics.csv');
   };
   critStream.pipe(writeableStream);
   criticData.forEach((element) => critStream.write(element));
@@ -153,10 +153,13 @@ function generateClack(reviewCount, reviewSets, total) {
           return faker.lorem.paragraphs();
       };
     };
+    var options = { month: 'long'};
+    var makeDate = faker.date.between('2016-03-01', '2019-03-31');
+    var revDate = (makeDate.getMonth() + 1) + '/' + makeDate.getDate() + '/' + makeDate.getFullYear();
     var reviewActual = reviewString();
     var newReview = {
       reviewID: count + (reviewSets * 500),
-      newDate: Math.floor(Math.random() * 2),
+      newDate: revDate,
       fresh: Math.floor(Math.random() * 2),
       reviewText: reviewActual.replace(/\n \r/g, '\\n\\r'),
       idFilm: Math.floor((1 - Math.random()) * total),
@@ -167,10 +170,10 @@ function generateClack(reviewCount, reviewSets, total) {
     newReview = null;
   }
   if (reviewSets === 0) {
-    var revStream = csv.createWriteStream({headers: true}),
+    var revStream = csv.createWriteStream({headers: true, includeEndRowDelimiter: true}),
     writeableStream = fs.createWriteStream(__dirname + '/reviews.csv');
   } else {
-    var revStream = csv.createWriteStream({headers: true}),
+    var revStream = csv.createWriteStream({headers: false, flags: 'a', includeEndRowDelimiter: true}),
     writeableStream = fs.createWriteStream(__dirname + '/reviews.csv', {'flags': 'a'});
   };
   revStream.pipe(writeableStream);
