@@ -1,1 +1,214 @@
-Test
+Journal
+
+Tuesday - March 12
+Tuesday was mainly a wasted day.  I wanted to pick a front end project so we could begin but
+Clifton and Eric wanted to wait - without knowing the module/project, everything remained on hold.
+Likely we’ll end up using RottenTomatoes but TBD.   We did set a weekly standup meeting on Sunday,
+a Trello board, and a GitHub team.
+
+Thursday - March 14
+
+We chose RottenTomato as anticipated and selected modules.  My module is the scoreboard -
+which may be the most challenging as Chris used Angular to make it…I am very clear that I only need
+to understand what I need to understand to connect the database and may not have to do too much with
+the client side.  I am still reviewing the background materials for SDC and only had the change to
+glance at the code in the scoreboard module.  I decided on Postgres which I have not used and Mongo -
+which I need to get more familiar with - for my databased subject to Leslie’s approval.  The next
+task is to determine the type and parameters of the data I will need to seed.
+
+Friday - March 15
+
+Spent the evening getting setup.  I reviewed the SDC deliverables and guidelines carefully taking
+notes on what comes next.  I set up a Trello team for the group - and asked Eric to move the board
+he created to the group, created my board and populated it with a number of tasks that I want to
+achieve on Saturday.  I forked my module to the git, decided to keep my journal in Ulysses and set
+that up, and filled in all of the deliverable links where necessary.  I likely will not have approval
+from Leslie about my database request until next week as she is off today, so today will be focused on
+clarifying my data needs.
+
+Saturday - March 16
+
+Not a very productive workday as I spent the morning preparing for a presentation and most of class was
+taken up by a Toy Problem, RPT10 SDC Presentations, and Junior/Senior coding with RPT 14.
+Main accomplishment was analysis of the database tables for the FEC module I need to seed.
+
+Sunday - March 17
+
+Had first standup which was OK - we finally settled on a proxy and did a good job documenting the standup.
+It took too long and I don’t think everyone is approaching this in an organized fashion - but these are
+lessons I’m learning for myself as well.
+
+Installed dependencies for the Scoreboard module - which entailed installing and switching to
+an older version of Node - I’ll be very curious to hear from Chris why he used this version.
+
+Installed PostgreSQL, created a user, database and the first table.
+
+Reviewed options for seeding and have decided to work with faker - started going down a rabbit hole over
+the data generation in terms of making the data more ‘realistic’ but caught myself and resisted
+the temptation to get too granular.
+
+Also started outlining seeding script - a new concern is the upper limit on the size of an array or
+whatever object I use to contain the data - research needed here.
+
+Also started Angular research - much more to do.
+
+Monday - March 18
+
+Finished PostgreSQL tables
+
+Made decisions for data sources - primarily Faker with some data manipulation
+
+Finished adding pseudocode and stubs for data creation script - next step is to organize it and test -
+also need to insert an opening\_date column in order to group related reviews by date
+
+Tuesday - March 19
+
+Fleshed out base code for dataset generation - next steps are to finish inputting code to save
+to disk as CSV files to save space - then will attempt a test run.
+
+Decided against adding an opening\_date column as it would create additional complexity and
+possibly interfere with already written code - just not worth it.
+
+Using a new module JSON2CSV to save to CSV - otherwise no unfamiliar or unusual code
+
+Wednesday - March 20
+
+Had trouble sleeping - which hampered my efforts today…finished coding for JSON2CSV conversion
+module and saving data tables to disk - next step is to test and refine…
+
+No major issues today - mainly followed documentation for JSON2CSV and reviewed Node documentation for
+createfilewritesync…
+
+Thursday - March 21
+
+Insomnia again - between that and class being busy with non-SDC activity not a lot accomplished
+today…just nibbling around the edge of resolving DB issues.
+
+Friday - March 22
+
+Crashed and slept all day - no work done.
+
+Saturday - March 23
+
+Did more refactoring of DB - movies and critics are generating OK but reviews (which are by far the
+most populated table) are not - experimented with changing Node memory allocation which helped and
+nulling out values as soon as they are saved.  Also inputted schema for PostgreSQL table.
+Class again was busy and did not permit a lot of time to work on SDC.
+
+Sunday - March 24
+
+Had a solid block of time to work on refactoring - all tables are generating JSON files correctly
+now but the conversion to CSV is still stalling out for the reviews table.  Refined specific
+properties of the data generation to yield better (e.g., initial caps for movie titles) results.
+Also sketched connection and attendant code for Mongo/Mongoose.
+
+Monday - March 25
+
+Increasing Node memory application solves the issues but have not found a good workaround.
+Tried refactoring to push only 1,000 and then 500 reviews at a time.  Tried exporting the write to
+a separate function and pushing the records 500 at a time to that function while nulling out the
+accumulator array.  Tried writing one record at a time and nulling out the accumulator each time.
+Still unable to generate the roughly 50 million reviews I need without increased memory allocation.
+
+Tuesday - March 26
+
+Talking it over with Leslie, her suggestion that the way I was trying to do this was not optimal made
+me realize that I needed to do something more async.  Once I had that realization, the pieces fell
+into place pretty quickly (especially if you don’t take into account the time needed to test enormous
+datasets).  Took me basically 90 minutes to finish the coding of all the data generation.  Amazing when
+the light goes on…
+
+Basically the solution is to use promises to stop the generation of data while the writing happens and
+then to null everything out and generate another batch.  The review module still takes too long but
+no increase in Node memory allocation and the other two generate pretty quickly.  Also resolve a
+niggling issue with newlines and saving to csv.  A successful night.
+
+Wednesday - March 27
+
+Refactored a bit to polish things up.  Reorganized my branches to more accurately reflect what I am
+working on.  Did a deep dive into PostgreSQL and Mongo and refined the code I had already written.
+Am just about ready to seed databases and test performance.
+
+Thursday - March 28
+
+Went down a few rabbit holes - one was a decision to explore attempting to plug the databases directly
+into the FEC code rather than testing them separately - the other was to start setting up full blown
+servers for each database before I realized that I simply need something to load the data and test
+performance really quickly on their own - not a whole CRUD setup.  Lost quite a bit of time, but
+at least I have a simpler view of what I need to do now.  Hope to finish the database seeding and
+testing tonight.
+
+Friday - March 29
+
+Finished PostgreSQL seeding - not particularly difficult just persnickety and meticulous -
+it works fine.  I have to regenerate the 10 million records because I’ve refined the data definitions
+quite a bit over the past 24 hours.  Almost finished Mongo seeding script - should be able to knock
+that out tonight after I take a nap - insomnia continues - haven’t slept for two days…Once datasets are
+regenerated and databases are seeded I can turn to more interesting work (hopefully tomorrow!) of
+benchmarking and starting to integrate my database with the actual module - took a few baby steps in
+that direction yesterday in terms of reading Knex documentation and making a few initial changes to
+the seeding script already in place.
+
+Saturday - March 30
+
+Nothing accomplished - a self evaluation, finishing the 'how the internet works' video, and preparing
+for my first presentation.
+
+Sunday - March 31
+
+Nothing accomplished - spent the day with my parents (visiting them in MI this weekend)
+
+Monday - April 1
+
+Nothing accomplished - reviewing my parent's finances in the morning then flight back to NYC delayed
+six hours then had a busy overnight at work
+
+Tuesday - April 2
+
+Moved this journal to GitHub as per Leslie's suggestion
+
+Made pull requests as per Leslie's recommendation - will ask for code review from TJ or Eric tomorrow
+
+Attempting to incorporate Leslie's feedback in this journal starting with a description of my goals for
+this working session.
+
+Goal #1
+
+One last refactoring of code
+
+A.  To improve reviews generation time - films and critics generate quickly but reviews takes a long,
+long time - I believe this is due to faker being relatively slow - Leslie agreed and suggested that
+part of the problem is that I am calling it multiple times to generate each review and that I should be
+able to find a way to call it once for all of the items - I anticipate this will require 45 minutes
+including research and execution
+
+B.  To correct a small error in the film and review generation code that produces incorrect id numbers.
+
+Goal #2
+
+Confirm correct seeding of PostgreSQL database - I've tested with several thousand records but have not
+yet loaded the whole dataset - this should not take long but there is a possibility of errors due to
+the size of the database - in addition I need to clean the code up a bit and clarify the need for client
+and pool code in the seeding file.  This should take 15 minutes if there are no errors.
+
+Goal #3
+
+Finish the implementation of the MongoDB/Mongoose database seeding.  I've sketched the code but need to
+test and refine it - I anticipate this will require 45 minutes.
+
+Goal #4
+
+Update trello, clarifying the next immediate steps and getting rid of superfluous repeating cards - this
+should take 10 minutes at the most
+
+Goal #5
+
+Document any problems I have along the way by clearly stating the issue, my understanding of what the
+cause is, my best guess about a solution, my solution, and how I found my solution - this can be
+documented here or in a separate spreadsheet that I should then save to GitHub.
+
+Goal #6
+
+Update this journal at the end of this working session.
+
+
