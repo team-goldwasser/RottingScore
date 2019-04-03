@@ -211,4 +211,8 @@ Goal #6
 
 Update this journal at the end of this working session.
 
+Results:
 
+Goal #1 will require a second 45 minute session.  When I started refactoring I remembered Leslie wanted me to reduce the number of parameters in each function (I was setting the necessary values for each function in the first function call and passing then down through each function - to clarify, the generateFilm function is called first - after its last iteration, it calls the next data generation function with the needed parameters, which calls the next data generation function after its last iteration, etc.) 
+
+In this first session, I reduced the parameters (by generating the necessary parameter within each function - this is possible because all of the parameters are calculated off of the initial value passed into the generateFilm function - consequently now I am only passing that value down to each subsequent function), fixed the issue with id numbering for films and critics (which was happening in part because of a missing append flag as each batch of data was saved to csv and partially because I needed to convert strings of numbers to numbers in order to add them properly), and rewrote the review generator to generate non-Latin text (something I wanted to do but forgot to mention above - this entailed using faker.random.words instead of faker.lorem.paragraph).  With this I added a random number generator to set the length of the generated string of words between 30 and 200 words).  I also researched Faker and believe that I need to use createCard to setup a review template that I can use to generate reviews in a less expensive way.
