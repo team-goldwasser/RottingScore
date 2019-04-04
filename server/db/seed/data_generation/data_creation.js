@@ -2,68 +2,83 @@
 const fs = require('fs');
 var csv = require("fast-csv");
 
-function generateMovie(filmTotal, critTotal, revTotal, filmSets, total){
-  if (critTotal === undefined) {
-    critTotal = filmTotal / 2;
-  }
-  if (revTotal === undefined) {
-    revTotal = filmTotal * 50;
-  }
+// This function is called first and generates film titles
+function generateMovie(filmTotal, filmSets, total){
+  //  filmSets keeps track of how many sets of 500 records have been generated
   if (filmSets === undefined) {
     filmSets = 0;
-  }
+  };
+  // Save the original parameter for the number of records
   if (total === undefined) {
     total = filmTotal;
-  }
-  generateFlic(filmTotal, critTotal, revTotal, filmSets, total);
+  };
+  // Creates a set of 500 film records
+  generateFlic(filmTotal, filmSets, total);
 }
 
-function generateCritic(critTotal, revTotal, critSets, total){
-  if (revTotal === undefined) {
-    revTotal = critTotal * 100;
-  }
+// Generates critic records - called from last iteration of generateMovie
+function generateCritic(critTotal, critSets, total){
+  //  critSets keeps track of how many sets of 500 records have been generated
   if (critSets === undefined) {
     critSets = 0;
-  }
+  };
+  // Save the original parameter for the number of records
   if (total === undefined) {
     total = critTotal * 2;
-  }
-  generateFlac(critTotal, revTotal, critSets, total);
+  };
+  // Creates a set of 500 critic records
+  generateFlac(critTotal, critSets, total);
 }
 
+// Generates review records - called from last iteration of generateCritic
 function generateReview(reviewTotal, revSets, total){
-  if (total === undefined) {
-    total = reviewTotal / 50;
-  }
+  //  revSets keeps track of how many sets of 500 records have been generated
   if (revSets === undefined) {
     revSets = 0;
-  }
+  };
+  // Creates a set of 500 review records
   generateClack(reviewTotal, revSets, total);
 }
 
-// Consider changing region settings for some small subset of
-// films to generate foreign films - perhaps once every 100 films
-
-function generateFlic(count, critCount, revCount, sets, total) {
+// Generates 500 film records (or less if fewer needed to reach requested total)
+function generateFlic(count, sets, total) {
+  // container for new records
   var movieData = [];
+  // decrements number of records to generate by the current batch of 500 unless
+  // less than 500 records are needed in which case total records needed is set to 0
   var countDown = count > 500 ? count - 500 : 0;
+  // sets the upper bound for the loop condition to 500 or remaining records needed
+  // whichever is less
   var loopLimit = count > 500 ? 500 : count;
+  // Loop to build film records
   for (tally = 1; tally <= loopLimit; tally++) {
-    var filmTitle = faker.lorem.words();
+    // Generates film title
+    var filmTitle = faker.random.words();
+    // Creates dummy url for film by replacing spaces with underscores
     var filmURL = filmTitle.replace(/ /g, '_');
+    // Initial caps film title by splitting title into an array
     var filmSplit = filmTitle.split(' ');
+    // Initializes an accumulator
     var filmString = '';
+    // Iterates through array pushing each word to a new string
     filmSplit.forEach(function(element) {
-      if (filmSplit.indexOf(element) === 0) {
+      // capitalize first word if title is more than one word
+      if (filmSplit.indexOf(element) === 0 && filmSplit.length > 1) {
         filmString += element[0].toUpperCase() + element.slice(1) + ' ';
+      // capitalize first word if only word in title
+      } else if (filmSplit.indexOf(element) === 0 && filmSplit.length === 1) {
+        filmString += element[0].toUpperCase() + element.slice(1);
+        // capitalize last word
       } else if (filmSplit.indexOf(element) === filmSplit.length - 1) {
         filmString += element[0].toUpperCase() + element.slice(1);
-      } else {
+        // capitalize any remaining words whose length is greater than two
+      } else if (element.length > 2) {
         filmString += element[0].toUpperCase() + element.slice(1) + ' ';
       }
     });
+    // creates new film object
     var newFilm = {
-      newID: tally + (sets * 500),
+      newID: (tally * 1) + (sets * 500),
       newTitle: filmString,
       newTitleURL: filmURL,
       newPoster: faker.image.image(),
@@ -72,12 +87,14 @@ function generateFlic(count, critCount, revCount, sets, total) {
     movieData.push(newFilm);
     newFilm = null;
   }
+  // sets writestream to include csv headers if this is the first batch saved to file
+  // otherwise sets writestream to skip headers and append data to existing file
   if (sets === 0) {
     var movieStream = csv.createWriteStream({headers: true, includeEndRowDelimiter: true}),
     writeableStream = fs.createWriteStream(__dirname + '/movies.csv');
   } else {
     var movieStream = csv.createWriteStream({headers: false, flags: 'a', includeEndRowDelimiter: true}),
-    writeableStream = fs.createWriteStream(__dirname + '/movies.csv');
+    writeableStream = fs.createWriteStream(__dirname + '/movies.csv', {'flags': 'a'});
   };
   movieStream.pipe(writeableStream);
   movieData.forEach((element) => movieStream.write(element));
@@ -85,25 +102,37 @@ function generateFlic(count, critCount, revCount, sets, total) {
   writeableStream.on(
     'finish',
     () => {
+      // if more films need to be generated calls generateMovie function with
+      // number of films remaining, number of batches generated, and overall total
+      // otherwise calls generateCritic function with overall total
       if (countDown > 0) {
         movieData = null;
         sets++;
-        generateMovie(countDown, critCount, revCount, sets, total);
+        generateMovie(countDown, sets, total);
       } else {
         console.log('Movie data saved!');
-        generateCritic(critCount, revCount, 0, total);
+        var criticsTotal = total / 2;
+        generateCritic(criticsTotal, 0, total);
       }
     }
   )
 }
 
-function generateCritic(criticTotal, reTotal, criticSets, total) {
+// Generates 500 critic records (or less if fewer needed to reach needed total)
+function generateFlac(criticTotal, criticSets, total) {
+  // container for new records
   var criticData = [];
+  // decrements number of records to generate by the current batch of 500 unless
+  // less than 500 records are needed in which case total records needed is set to 0
   var dwindle = criticTotal > 500 ? criticTotal - 500 : 0;
+  // sets the upper bound for the loop condition to 500 or remaining records needed
+  // whichever is less
   var loopCap = criticTotal > 500 ? 500 : criticTotal;
+  // Loop to build critic records
   for (marker = 1; marker <= loopCap; marker++) {
+    // creates new critic object
     var newCritic = {
-      idCritic: marker + (criticSets * 500),
+      idCritic: (marker * 1) + (criticSets * 500),
       topCritic: Math.floor(Math.random() * 2),
       name: faker.name.findName(),
       newImage: faker.image.avatar(),
@@ -112,12 +141,14 @@ function generateCritic(criticTotal, reTotal, criticSets, total) {
     criticData.push(newCritic);
     newCritic = null;
   }
+  // sets writestream to include csv headers if this is the first batch saved to file
+  // otherwise sets writestream to skip headers and append data to existing file
   if (criticSets === 0) {
     var critStream = csv.createWriteStream({headers: true, includeEndRowDelimiter: true}),
     writeableStream = fs.createWriteStream(__dirname + '/critics.csv');
   } else {
     var critStream = csv.createWriteStream({headers: false, flags: 'a', includeEndRowDelimiter: true}),
-    writeableStream = fs.createWriteStream(__dirname + '/critics.csv');
+    writeableStream = fs.createWriteStream(__dirname + '/critics.csv', {'flags': 'a'});
   };
   critStream.pipe(writeableStream);
   criticData.forEach((element) => critStream.write(element));
@@ -125,43 +156,43 @@ function generateCritic(criticTotal, reTotal, criticSets, total) {
   writeableStream.on(
     'finish',
     () => {
+      // if more critics need to be generated calls generateCritic function with
+      // number of critics remaining, number of batches generated, and overall total
+      // otherwise calls generateReview function with overall total
       if (dwindle > 0) {
         criticData = null;
         criticSets++;
-        generateCritic(dwindle, reTotal, criticSets, total);
+        generateCritic(dwindle, criticSets, total);
       } else {
         console.log('Critics data saved!');
+        var reTotal = total * 50;
         generateReview(reTotal, 0, total);
       }
     }
   )
 }
 
+// Generates 500 review records (or less if fewer needed to reach needed total)
 function generateClack(reviewCount, reviewSets, total) {
+  // container for new records
   var reviewData = [];
+  // decrements number of records to generate by the current batch of 500 unless
+  // less than 500 records are needed in which case total records needed is set to 0
   var windDown = reviewCount > 500 ? reviewCount - 500 : 0;
+  // sets the upper bound for the loop condition to 500 or remaining records needed
+  // whichever is less
   var loopMax = reviewCount > 500 ? 500 : reviewCount;
+  // Loop to build review records
   for (count = 1; count <= loopMax; count++) {
-    reviewString = () => {
-      var generatorChoice = Math.floor(Math.random() * 3) + 1;
-      switch(generatorChoice){
-        case 1:
-          return faker.lorem.sentences();
-        case 2:
-          return faker.lorem.paragraph();
-        case 3:
-          return faker.lorem.paragraphs();
-      };
-    };
-    var options = { month: 'long'};
+    var revLength = Math.floor(Math.random() * 170) + 30;
     var makeDate = faker.date.between('2016-03-01', '2019-03-31');
     var revDate = (makeDate.getMonth() + 1) + '/' + makeDate.getDate() + '/' + makeDate.getFullYear();
-    var reviewActual = reviewString();
+    // creates new review object
     var newReview = {
-      reviewID: count + (reviewSets * 500),
+      reviewID: (count * 1) + (reviewSets * 500),
       newDate: revDate,
       fresh: Math.floor(Math.random() * 2),
-      reviewText: reviewActual.replace(/\n \r/g, '\\n\\r'),
+      reviewText: faker.random.words(revLength),
       idFilm: Math.floor((1 - Math.random()) * total),
       idCrit: Math.floor((1 - Math.random()) * (total / 2)),
       rating: Math.floor(Math.random() * 10) + (Math.floor(Math.random() * 10) / 100)
@@ -169,6 +200,8 @@ function generateClack(reviewCount, reviewSets, total) {
     reviewData.push(newReview);
     newReview = null;
   }
+  // sets writestream to include csv headers if this is the first batch saved to file
+  // otherwise sets writestream to skip headers and append data to existing file
   if (reviewSets === 0) {
     var revStream = csv.createWriteStream({headers: true, includeEndRowDelimiter: true}),
     writeableStream = fs.createWriteStream(__dirname + '/reviews.csv');
@@ -182,10 +215,13 @@ function generateClack(reviewCount, reviewSets, total) {
   writeableStream.on(
     'finish',
     () => {
+      // if more reviews need to be generated calls generateReview function with
+      // number of reviews remaining and number of batches generated
       if (windDown > 0) {
         reviewData = null;
         reviewSets++;
-        if (reviewSets % 100000 === 0) {
+        // display counter to show progress
+        if (reviewSets % 1000000 === 0) {
           console.log(reviewSets + ' records generated!');
         };
         writeableStream.end();
