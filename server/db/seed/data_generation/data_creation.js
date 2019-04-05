@@ -224,7 +224,6 @@ function generateClack(reviewCount, reviewSets, total) {
         if (reviewSets % 1000000 === 0) {
           console.log(reviewSets + ' records generated!');
         };
-        writeableStream.end();
         generateReview(windDown, reviewSets, total);
       } else {
         writeableStream.end();
