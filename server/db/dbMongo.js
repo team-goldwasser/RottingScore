@@ -1,73 +1,136 @@
 ﻿var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var csv = require('fast-csv');
+var fs = require('fs');
+var movies = require('./mongoModels/movies');
+var critics = require('./mongoModels/critics');
+var reviews = require('./mongoModels/reviews');
 
-mongoose.connect('mongodb://localhost:27017/myapp');
+mongoose.connect('mongodb://localhost:27017/ryanSDC', {useNewUrlParser: true}, () => {
+  mongoose.connection.db.dropDatabase();
+});
+// { useMongoClient: true }
 
-  var movieSchema = new Schema({
-    id: false,
-    _id: Number,
-    title: {
-      type: String,
-      default: null
-    },
-    title_url: String,
-    tmdb_poster_path: String,
-    tmdb_backdrop_path: String
-  });
+var db = mongoose.connection;
 
-  movieSchema.Index( { title: 1 } );
+db.on('error', console.error.bind(console, 'connection error:'));
 
-  var criticSchema = new Schema({
-    id: false,
-    _id: Number,
-    top_critic: {
-      type: Number,
-      default: null,
-      min: 0,
-      max: 1
-    },
-    name: {
-      type: String,
-      default: null
-    },
-    img_url: String,
-    organization: {
-      type: String,
-      default: null
-    },
-  });
+db.once('open', function() {
+  importFilm();
+});
 
-  var reviewSchema = new Schema({
-    id: false,
-    _id: Number,
-    review_date: {
-      type: Date,
-      default: null
-    },
-    fresh: {
-      type: Number,
-      min: 0,
-      max: 1,
-      default: 0
-    },
-    review_text: {
-      type: String,
-      default: null
-    },
-    movie_id: {
-      type: Number,
-      default: null,
-    },
-    critic_id: {
-      type: Number,
-      default: null
-    },
-    score: {
-      type: Number,
-      default: null,
-      min: 0,
-      max: 10
-    },
-  });
+// This function is called first and saves film titles
+function importFilm(){
+  getMovies(append);
+}
 
-  db.Index( { name: 1 } );
+// Saves critic records - called from last iteration of generateMovie
+function importCrits(){
+  getCritics(append);
+}
+
+// Generates critic records - called from last iteration of generateMovie
+function importRevs(){
+  getReviews(append);
+}
+
+function getMovies(append) {
+  if (!append) {
+    var filmStream = fs.createReadStream(__dirname + '/seed/data_generation/movies2.csv');
+  } else {
+    filmStream.resume();
+  }
+  var films = [];
+  var append = true;
+  csv
+   .fromStream(filmStream, {
+    headers: true,
+   })
+   .on('data', function(data){
+      data['_id'] = data['newID'];
+      films.push(data);
+      if (films.length > 100) {
+        movies.create(films, function(err, documents) {
+          if (err) throw err;
+        });
+        filmStream.pause();
+        films = [];
+        importFilm(append);
+      }
+   })
+   .on('end', function(){
+      if (films.length > 0) {
+        movies.create(films, function(err, documents) {
+          if (err) throw err;
+        });
+      };
+      console.log('Film import complete!');
+      importCrits();
+   });
+}
+
+function getCritics() {
+  if (!append) {
+    var criticStream = fs.createReadStream(__dirname + '/seed/data_generation/critics2.csv');
+  } else {
+    criticStream.resume();
+  }
+  var crits = [];
+  csv
+   .fromStream(criticStream, {
+    headers: true,
+   })
+   .on('data', function(data){
+      data['_id'] = data['idCritic'];
+      crits.push(data);
+      if (crits.length > 100) {
+        critics.create(crits, function(err, documents) {
+          if (err) throw err;
+        });
+        criticStream.pause();
+        crits = [];
+        importCrits(append);
+      }
+   })
+   .on('end', function(){
+      if (crits.length > 0) {
+        critics.create(crits, function(err, documents) {
+          if (err) throw err;
+        });
+      };
+      console.log('Critics import complete!');
+      importRevs();
+   });
+}
+
+function getReviews() {
+  if (!append) {
+    var reviewStream = fs.createReadStream(__dirname + '/seed/data_generation/reviews2.csv');
+  } else {
+    reviewStream.resume();
+  }
+  var revs = [];
+  csv
+   .fromStream(reviewStream, {
+    headers: true,
+   })
+   .on('data', function(data){
+      data['_id'] = data['reviewID'];
+      revs.push(data);
+      if (revs.length > 100) {
+        reviews.create(revs, function(err, documents) {
+          if (err) throw err;
+        });
+        reviewStream.pause();
+        revs = [];
+        importRevs(append);
+      }
+   })
+   .on('end', function(){
+      if (revs.length > 0) {
+        reviews.create(revs, function(err, documents) {
+          if (err) throw err;
+        });
+      };
+      console.log('Reviews import complete!');
+   });
+}

@@ -6,9 +6,9 @@ var copyFrom = require('pg-copy-streams').from;
 const text = 'SELECT * FROM movies WHERE _id = 10';
 
 const pgPW = require('./dbAccess');
-var movieInput = path.join(__dirname, './seed/data_generation/movies2.csv');
-var criticInput = path.join(__dirname, './seed/data_generation/critics2.csv');
-var reviewInput = path.join(__dirname, './seed/data_generation/reviews2.csv');
+var movieInput = path.join(__dirname, './seed/data_generation/movies.csv');
+var criticInput = path.join(__dirname, './seed/data_generation/critics.csv');
+var reviewInput = path.join(__dirname, './seed/data_generation/reviews.csv');
 
 var filmTable = 'movies';
 var criticTable = 'critics';
