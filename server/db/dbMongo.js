@@ -36,15 +36,15 @@ function importRevs(){
 function getMovies(append) {
   if (!append) {
     var filmStream = fs.createReadStream(__dirname + '/seed/data_generation/movies2.csv');
+    var headings = {headers: true};
   } else {
     filmStream.resume();
+    var headings = {headers: false};
   }
   var films = [];
-  var append = true;
+  var append;
   csv
-   .fromStream(filmStream, {
-    headers: true,
-   })
+   .fromStream(filmStream, headings)
    .on('data', function(data){
       data['_id'] = data['newID'];
       films.push(data);
@@ -71,14 +71,14 @@ function getMovies(append) {
 function getCritics() {
   if (!append) {
     var criticStream = fs.createReadStream(__dirname + '/seed/data_generation/critics2.csv');
+    var headings = {headers: true};
   } else {
     criticStream.resume();
+    var headings = {headers: false};
   }
   var crits = [];
   csv
-   .fromStream(criticStream, {
-    headers: true,
-   })
+   .fromStream(criticStream, headings)
    .on('data', function(data){
       data['_id'] = data['idCritic'];
       crits.push(data);
@@ -105,14 +105,14 @@ function getCritics() {
 function getReviews() {
   if (!append) {
     var reviewStream = fs.createReadStream(__dirname + '/seed/data_generation/reviews2.csv');
+    var headings = {headers: true};
   } else {
     reviewStream.resume();
+    var headings = {headers: false};
   }
   var revs = [];
   csv
-   .fromStream(reviewStream, {
-    headers: true,
-   })
+   .fromStream(reviewStream, headings)
    .on('data', function(data){
       data['_id'] = data['reviewID'];
       revs.push(data);
