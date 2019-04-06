@@ -2,8 +2,7 @@
 var Schema = mongoose.Schema;
 
   var movieSchema = new Schema({
-    id: false,
-    _id: Number,
+    filmID: Number,
     title: {
       type: String,
       default: null

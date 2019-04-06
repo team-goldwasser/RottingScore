@@ -2,8 +2,7 @@
 var Schema = mongoose.Schema;
 
 var criticSchema = new Schema({
-    id: false,
-    _id: Number,
+    criticID: Number,
     top_critic: {
       type: Number,
       default: null,

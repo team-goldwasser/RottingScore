@@ -2,8 +2,7 @@
 var Schema = mongoose.Schema;
 
   var reviewSchema = new Schema({
-    id: false,
-    _id: Number,
+    reviewID: Number,
     review_date: {
       type: Date,
       default: null
