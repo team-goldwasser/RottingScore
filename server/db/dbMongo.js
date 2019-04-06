@@ -19,40 +19,49 @@ db.once('open', function() {
 });
 
 // This function is called first and saves film titles
-function importFilm(append){
+function importFilm(append, rowsRead){
   if (!append) {
     var append;
-  }
-  getMovies(append);
+  };
+  if (!rowsRead) {
+    var rowsRead;
+  };
+  getMovies(append, rowsRead);
 }
 
 // Saves critic records - called from last iteration of generateMovie
-function importCrits(append){
+function importCrits(append, rowsRead){
   if (!append) {
     var append;
-  }
-  getCritics(append);
+  };
+  if (!rowsRead) {
+    var rowsRead;
+  };
+  getCritics(append, rowsRead);
 }
 
 // Generates critic records - called from last iteration of generateMovie
-function importRevs(append, reviewStream){
+function importRevs(append, rowsRead){
   if (!append) {
     var append;
-  }
-  if (!reviewStream) {
-    var reviewStream;
-  }
-
-  getReviews(append, reviewStream);
+  };
+  if (!rowsRead) {
+    var rowsRead;
+  };
+  getReviews(append, rowsRead);
 }
 
-function getMovies(append) {
+function getMovies(append, rowsRead) {
   if (!append) {
-    var filmStream = fs.createReadStream(__dirname + '/seed/data_generation/movies2.csv');
+    var filmStream = fs.createReadStream(__dirname + '/seed/data_generation/movies.csv');
     var headings = {headers: true};
+    rowsRead = 0;
+    var rowsAdded = 1;
   } else {
-    filmStream.resume();
+    var filmStream = fs.createReadStream(__dirname + '/seed/data_generation/movies.csv');
     var headings = {headers: false};
+    var rowsAdded = 100;
+    console.log('TWO!!!!!');
   }
   var films = [];
   var append;
@@ -65,15 +74,22 @@ function getMovies(append) {
       data['tmdb_poster_path'] = data['newPoster'];
       data['tmdb_backdrop_path'] = data['newBackdrop'];
       films.push(data);
-      if (films.length > 100) {
+      console.log('LENGTH', films.length);
+      if (films.length >= 100 && rowsAdded <= rowsRead) {
+        films = [];
+        rowsAdded += 100;
+      };
+      if (films.length >= 100 && rowsAdded > rowsRead) {
         movies.insertMany(films, function(err, documents) {
           if (err) throw err;
+          rowsRead = rowsRead + 100;
+          filmStream.pause();
+          films = [];
+          append = true;
+          console.log('ROWS', rowsRead);
+          importFilm(append, rowsRead);
         });
-        filmStream.pause();
-        films = [];
-        append = true;
-        importFilm(append);
-      }
+    }
    })
    .on('end', function(){
       if (films.length > 0) {
@@ -86,13 +102,16 @@ function getMovies(append) {
    });
 }
 
-function getCritics(append) {
+function getCritics(append, rowsRead) {
   if (!append) {
-    var criticStream = fs.createReadStream(__dirname + '/seed/data_generation/critics2.csv');
+    var criticStream = fs.createReadStream(__dirname + '/seed/data_generation/critics.csv');
     var headings = {headers: true};
+    rowsRead = 0;
+    var rowsAdded = 1;
   } else {
-    criticStream.resume();
+    var criticStream = fs.createReadStream(__dirname + '/seed/data_generation/critics.csv');
     var headings = {headers: false};
+    var rowsAdded = 100;
   }
   var crits = [];
   csv
@@ -103,15 +122,20 @@ function getCritics(append) {
     data['img_url'] = data['newImage'];
     data['organization'] = data['org'];
     crits.push(data);
-      if (crits.length > 100) {
-        critics.insertMany(crits, function(err, documents) {
-          if (err) throw err;
-        });
+    if (crits.length >= 100 && rowsAdded <= rowsRead) {
+      crits = [];
+      rowsAdded += 100;
+    }
+    if (crits.length >= 100 && (rowsAdded > rowsRead || rowsRead === 0)) {
+      critics.insertMany(crits, function(err, documents) {
+        if (err) throw err;
         criticStream.pause();
         crits = [];
         append = true;
-        importCrits(append);
-      }
+        rowsRead += 100;
+        importCrits(append, rowsRead);
+      });
+    }
    })
    .on('end', function(){
       if (crits.length > 0) {
@@ -124,40 +148,42 @@ function getCritics(append) {
    });
 }
 
-function getReviews(append, reviewStream) {
+function getReviews(append, rowsRead) {
   if (!append) {
-    console.log('START');
-    var reviewStream = fs.createReadStream(__dirname + '/seed/data_generation/reviews2.csv');
+    var reviewStream = fs.createReadStream(__dirname + '/seed/data_generation/reviews.csv');
     var headings = {headers: true};
+    rowsRead = 0;
+    var rowsAdded = 1;
   } else {
-    reviewStream.resume();
+    var reviewStream = fs.createReadStream(__dirname + '/seed/data_generation/reviews.csv');
     var headings = {headers: false};
+    var rowsAdded = 0;
   }
   var revs = [];
   csv
    .fromStream(reviewStream, headings)
    .on('data', function(data){
-    // console.log('Seeding Review # ' + data['reviewID'] );
-    data['review_date'] = data['newDate'];
+      data['review_date'] = data['newDate'];
       data['review_text'] = data['reviewText'];
       data['movie_id'] = data['idFilm'];
       data['critic_id'] = data['idCrit'];
       data['score'] = data['rating'];
       revs.push(data);
-      if (revs.length > 100) {
+      if (revs.length >= 100 && rowsAdded <= rowsRead) {
+        revs = [];
+        rowsAdded += 100;
+      }
+      if (revs.length >= 100 && (rowsAdded > rowsRead || rowsRead === 0)) {
         reviews.insertMany(revs, function(err, documents) {
           if (err) {
-            var idBox = [];
-            for (var i = 0; i < revs.length; i++){
-              idBox.push(revs[i]['_id']);
-            }
             throw err;
           }
-        });
+        })
         reviewStream.pause();
         revs = [];
+        rowsRead += 100;
         append = true;
-        importRevs(append, reviewStream);
+        importRevs(append, rowsRead);
       }
    })
    .on('end', function(){
