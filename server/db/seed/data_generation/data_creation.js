@@ -192,7 +192,7 @@ function generateClack(reviewCount, reviewSets, total) {
       reviewID: (count * 1) + (reviewSets * 500),
       newDate: revDate,
       fresh: Math.floor(Math.random() * 2),
-      reviewText: faker.random.words(revLength),
+      reviewText: faker.lorem.paragraphs(),
       idFilm: Math.floor((1 - Math.random()) * total),
       idCrit: Math.floor((1 - Math.random()) * (total / 2)),
       rating: Math.floor(Math.random() * 10) + (Math.floor(Math.random() * 10) / 100)
@@ -224,7 +224,6 @@ function generateClack(reviewCount, reviewSets, total) {
         if (reviewSets % 1000000 === 0) {
           console.log(reviewSets + ' records generated!');
         };
-        writeableStream.end();
         generateReview(windDown, reviewSets, total);
       } else {
         writeableStream.end();
