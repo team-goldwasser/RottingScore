@@ -8,7 +8,6 @@ var reviews = require('./mongoModels/reviews');
 mongoose.connect('mongodb://localhost:27017/ryanSDC', {useNewUrlParser: true}, () => {
   mongoose.connection.db.dropDatabase();
 });
-// { useMongoClient: true }
 
 var db = mongoose.connection;
 
@@ -19,52 +18,24 @@ db.once('open', function() {
 });
 
 // This function is called first and saves film titles
-function importFilm(append, rowsRead){
-  if (!append) {
-    var append;
-  };
-  if (!rowsRead) {
-    var rowsRead;
-  };
-  getMovies(append, rowsRead);
+function importFilm(){
+  getMovies();
 }
 
-// Saves critic records - called from last iteration of generateMovie
-function importCrits(append, rowsRead){
-  if (!append) {
-    var append;
-  };
-  if (!rowsRead) {
-    var rowsRead;
-  };
-  getCritics(append, rowsRead);
+// Saves critic records - called from last insert of generateMovie
+function importCrits(){
+  getCritics();
 }
 
-// Generates critic records - called from last iteration of generateMovie
-function importRevs(append, rowsRead){
-  if (!append) {
-    var append;
-  };
-  if (!rowsRead) {
-    var rowsRead;
-  };
-  getReviews(append, rowsRead);
+// Generates critic records - called from last insert of generateMovie
+function importRevs(){
+  getReviews();
 }
 
-function getMovies(append, rowsRead) {
-  if (!append) {
-    var filmStream = fs.createReadStream(__dirname + '/seed/data_generation/movies.csv');
-    var headings = {headers: true};
-    rowsRead = 0;
-    var rowsAdded = 1;
-  } else {
-    var filmStream = fs.createReadStream(__dirname + '/seed/data_generation/movies.csv');
-    var headings = {headers: false};
-    var rowsAdded = 100;
-    console.log('TWO!!!!!');
-  }
+function getMovies() {
+  var filmStream = fs.createReadStream(__dirname + '/seed/data_generation/movies.csv');
+  var headings = {headers: true};
   var films = [];
-  var append;
   csv
    .fromStream(filmStream, headings)
    .on('data', function(data){
@@ -74,21 +45,13 @@ function getMovies(append, rowsRead) {
       data['tmdb_poster_path'] = data['newPoster'];
       data['tmdb_backdrop_path'] = data['newBackdrop'];
       films.push(data);
-      console.log('LENGTH', films.length);
-      if (films.length >= 100 && rowsAdded <= rowsRead) {
-        films = [];
-        rowsAdded += 100;
-      };
-      if (films.length >= 100 && rowsAdded > rowsRead) {
+      if (films.length > 100) {
+        filmStream.pause();
         movies.insertMany(films, function(err, documents) {
           if (err) throw err;
-          rowsRead = rowsRead + 100;
-          filmStream.pause();
-          films = [];
-          append = true;
-          console.log('ROWS', rowsRead);
-          importFilm(append, rowsRead);
         });
+        films = [];
+        filmStream.resume();
     }
    })
    .on('end', function(){
@@ -102,17 +65,9 @@ function getMovies(append, rowsRead) {
    });
 }
 
-function getCritics(append, rowsRead) {
-  if (!append) {
-    var criticStream = fs.createReadStream(__dirname + '/seed/data_generation/critics.csv');
-    var headings = {headers: true};
-    rowsRead = 0;
-    var rowsAdded = 1;
-  } else {
-    var criticStream = fs.createReadStream(__dirname + '/seed/data_generation/critics.csv');
-    var headings = {headers: false};
-    var rowsAdded = 100;
-  }
+function getCritics() {
+  var criticStream = fs.createReadStream(__dirname + '/seed/data_generation/critics.csv');
+  var headings = {headers: true};
   var crits = [];
   csv
    .fromStream(criticStream, headings)
@@ -122,19 +77,13 @@ function getCritics(append, rowsRead) {
     data['img_url'] = data['newImage'];
     data['organization'] = data['org'];
     crits.push(data);
-    if (crits.length >= 100 && rowsAdded <= rowsRead) {
-      crits = [];
-      rowsAdded += 100;
-    }
-    if (crits.length >= 100 && (rowsAdded > rowsRead || rowsRead === 0)) {
+    if (crits.length >= 100) {
+      criticStream.pause();
       critics.insertMany(crits, function(err, documents) {
         if (err) throw err;
-        criticStream.pause();
-        crits = [];
-        append = true;
-        rowsRead += 100;
-        importCrits(append, rowsRead);
       });
+      crits = [];
+      criticStream.resume();
     }
    })
    .on('end', function(){
@@ -148,17 +97,9 @@ function getCritics(append, rowsRead) {
    });
 }
 
-function getReviews(append, rowsRead) {
-  if (!append) {
-    var reviewStream = fs.createReadStream(__dirname + '/seed/data_generation/reviews.csv');
-    var headings = {headers: true};
-    rowsRead = 0;
-    var rowsAdded = 1;
-  } else {
-    var reviewStream = fs.createReadStream(__dirname + '/seed/data_generation/reviews.csv');
-    var headings = {headers: false};
-    var rowsAdded = 0;
-  }
+function getReviews() {
+  var reviewStream = fs.createReadStream(__dirname + '/seed/data_generation/reviews.csv');
+  var headings = {headers: true};
   var revs = [];
   csv
    .fromStream(reviewStream, headings)
@@ -169,22 +110,14 @@ function getReviews(append, rowsRead) {
       data['critic_id'] = data['idCrit'];
       data['score'] = data['rating'];
       revs.push(data);
-      if (revs.length >= 100 && rowsAdded <= rowsRead) {
-        revs = [];
-        rowsAdded += 100;
-      }
-      if (revs.length >= 100 && (rowsAdded > rowsRead || rowsRead === 0)) {
-        reviews.insertMany(revs, function(err, documents) {
-          if (err) {
-            throw err;
-          }
-        })
+      if (revs.length >= 100) {
         reviewStream.pause();
-        revs = [];
-        rowsRead += 100;
-        append = true;
-        importRevs(append, rowsRead);
-      }
+        reviews.insertMany(revs, function(err, documents) {
+          if (err) throw err;
+        })
+      };
+      revs = [];
+      reviewStream.resume();
    })
    .on('end', function(){
       if (revs.length > 0) {
@@ -192,6 +125,7 @@ function getReviews(append, rowsRead) {
           if (err) throw err;
         });
       };
+      db.close();
       console.log('Reviews import complete!');
    });
 }
