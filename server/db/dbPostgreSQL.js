@@ -3,7 +3,7 @@ const path = require('path');
 const { Pool, Client } = require('pg');
 var copyFrom = require('pg-copy-streams').from;
 
-const text = 'SELECT * FROM movies WHERE _id = 10';
+// const text = 'SELECT * FROM movies WHERE _id = 10';
 
 const pgPW = require('./dbAccess');
 var movieInput = path.join(__dirname, './seed/data_generation/movies.csv');
@@ -21,11 +21,6 @@ const pool = new Pool({
   password: pgPW,
   port: 5432,
 })
-
-// pool.query(text)
-//   .then(res => console.log('Movie Data: ' + res.rows[0]))
-//   .catch(e => setImmediate(() => { throw e }))
-//   .then(pool.end());
 
 const client = new Client({
   user: 'mysdc',
@@ -53,7 +48,6 @@ client.query(`Truncate ${filmTable} CASCADE`, (err) => {
     })
     stream.on('end', () => {
       console.log(`Completed loading data into ${filmTable}`)
-      // client.end()
       client.query(`Truncate ${criticTable} CASCADE`, (err) => {
         if (err) {
           client.end()
@@ -71,7 +65,6 @@ client.query(`Truncate ${filmTable} CASCADE`, (err) => {
           })
           stream.on('end', () => {
             console.log(`Completed loading data into ${criticTable}`)
-            // client.end()
             client.query(`Truncate ${reviewTable} CASCADE`, (err) => {
               if (err) {
                 client.end()
