@@ -54,6 +54,7 @@
     "gulp-uglify": "^2.0.0",
     "jest": "^24.1.0",
     "jest-preset-angular": "^6.0.2",
+    "nodemon": "^1.18.11",
     "run-sequence": "^1.2.2",
     "superagent": "^4.1.0",
     "supertest": "^3.4.2"
