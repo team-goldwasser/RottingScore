@@ -1,0 +1,118 @@
+﻿CRUD Description:
+
+Movies:
+
+GET:
+
+app.get('/m/movieinfo/:id', getMovieInfobyID);
+
+Retrieves movie title and URLs for film and two images - request must include unique film ID.
+
+app.get('/m/movieinfo/:name', getMovieInfobyName);
+
+Retrieves movie ID and URLs for film and two images - request must include unique film title.
+
+POST:
+
+app.post('/m/movieinfo', createFilm);
+
+Creates a new film - request body must contain a new title and URLs for film and two images.
+
+DELETE:
+
+app.delete('/m/movieinfo/:id', deleteFilmbyID);
+
+Deletes a film - request must include unique film ID.
+
+app.delete('/m/movieinfo/:name', deleteFilmbyName);
+
+Deletes a film - request must include unique film name.
+
+PUT:
+
+app.put('/m/movieinfo/:id', updateFilmbyID);
+
+Updates a film - request must include unique film ID and changed data for the title and/or
+URLs for film and two images.
+
+app.put('/m/movieinfo/:name', updateFilmbyName);
+
+Updates a film - request must include unique film name and changed data for the title and/or
+URLs for film and two images.
+
+Reviews:
+
+GET:
+
+app.get('/cr/criticinfo/:name', getCriticbyName);
+
+Retrieves all reviews by a particular critic - request must include unique critic name.
+
+app.get('/cr/tomotometer/:id', getReviewsbyID);
+
+Retrieves all reviews for a particular film - request must include unique film ID.
+
+app.get('/cr/tomotometer/:name', getReviewsbyName);
+
+Retrieves all reviews for a particular film - request must include unique film name.
+
+app.get('/cr/topcriticmeter/:id', getTopReviewsbyID);
+
+Retrieves all reviews by top rated critics for a particular film - request must include unique film ID.
+
+app.get('/cr/topcriticmeter/:name', getTopReviewsbyName);
+
+Retrieves all reviews by top rated critics for a particular film - request must include unique film name.
+
+app.get('/cr/topdozenreviews/:id', get12ReviewsbyID);
+
+Retrieves twelve random reviews for a particular film - request must include unique film ID.
+
+app.get('/cr/topdozenreviews/:name', get12ReviewsbyName);
+
+Retrieves twelve random reviews for a particular film - request must include unique film name.
+
+POST:
+
+app.post('/rev/reviewinfo', createReview);
+
+Creates a new review - request body must contain a review date (MM-DD-YYYY), whether the review is
+fresh (1) or not (0), the first paragraph of the review, a URL for the full review, the unique film ID,
+the name of the critic, and the critic's rating (0.0 - 10) for the film.
+
+DELETE:
+
+app.delete('/rev/reviewinfo/:id', deleteReview);
+
+Deletes a review - request must include unique review ID.
+
+PUT:
+
+app.put('/rev/reviewinfo/:id', updateReview);
+
+Updates a review - request must include unique review ID and changed data for the review date (MM-DD-YYYY),
+the review's fresh status, the text of the review's first paragraph, the full review URL, the unique film ID,
+the name of the critic, and/or the critic's rating.
+
+Critics:
+
+POST:
+
+app.post('/cr/criticinfo', createCritic);
+
+Creates a new critic - request body must contain name, top critic status, a URL to a photograph,
+and the critic's organization.
+
+DELETE:
+
+app.delete('/cr/criticinfo/:name', deleteCritic);
+
+Deletes a critic - request must include unique critic name.
+
+PUT:
+
+app.put('/cr/criticinfo/:name', updateCritic);
+
+Updates a critic - request must include unique critic name and changed data for the critic's name,
+top critic status, photograph URL, and/or the critic's organization.
+
