@@ -29,3 +29,4 @@ build/
 
 # PostgreSQL password
 ./server/db/dbAccess.js
+./server/db/seed/config.js
