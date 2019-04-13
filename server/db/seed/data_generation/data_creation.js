@@ -78,11 +78,10 @@ function generateFlic(count, sets, total) {
     });
     // creates new film object
     var newFilm = {
-      newID: (tally * 1) + (sets * 500),
-      newTitle: filmString,
-      newTitleURL: filmURL,
-      newPoster: faker.image.image(),
-      newBackdrop: faker.image.image()
+      title: filmString,
+      titleURL: filmURL,
+      poster: faker.image.image(),
+      backdrop: faker.image.image()
     };
     movieData.push(newFilm);
     newFilm = null;
@@ -132,7 +131,6 @@ function generateFlac(criticTotal, criticSets, total) {
   for (marker = 1; marker <= loopCap; marker++) {
     // creates new critic object
     var newCritic = {
-      idCritic: (marker * 1) + (criticSets * 500),
       topCritic: Math.floor(Math.random() * 2),
       name: faker.name.findName(),
       newImage: faker.image.avatar(),
@@ -184,18 +182,17 @@ function generateClack(reviewCount, reviewSets, total) {
   var loopMax = reviewCount > 500 ? 500 : reviewCount;
   // Loop to build review records
   for (count = 1; count <= loopMax; count++) {
-    var revLength = Math.floor(Math.random() * 170) + 30;
     var makeDate = faker.date.between('2016-03-01', '2019-03-31');
     var revDate = (makeDate.getMonth() + 1) + '/' + makeDate.getDate() + '/' + makeDate.getFullYear();
     // creates new review object
     var newReview = {
-      reviewID: (count * 1) + (reviewSets * 500),
       newDate: revDate,
       fresh: Math.floor(Math.random() * 2),
-      reviewText: faker.lorem.paragraphs(),
+      reviewText: faker.lorem.paragraphs(paragraphCount [1]),
       idFilm: Math.floor((1 - Math.random()) * total),
       idCrit: Math.floor((1 - Math.random()) * (total / 2)),
-      rating: Math.floor(Math.random() * 10) + (Math.floor(Math.random() * 10) / 100)
+      rating: Math.floor(Math.random() * 10) + (Math.floor(Math.random() * 10) / 100),
+      reviewURL: faker.internet.url(),
     };
     reviewData.push(newReview);
     newReview = null;

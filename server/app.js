@@ -6,33 +6,33 @@ const cors = require('cors');
 
 app.use(cors());
 
-app.get('/m/movieinfo/:id', getMovieInfobyID);
-app.get('/m/movieinfo/:name', getMovieInfobyName);
+app.get('/m/movieinfo/ID/:id', db.getMovieInfobyID);
+app.get('/m/movieinfo/name/:name', db.getMovieInfobyName);
 
-app.get('/cr/criticinfo/:name', getCriticbyName);
+app.get('/cr/criticinfo/:name', db.getCriticbyName);
 
-app.get('/cr/tomotometer/:id', getReviewsbyID);
-app.get('/cr/tomotometer/:name', getReviewsbyName);
+app.get('/cr/tomotometer/ID/:id', db.getReviewsbyID);
+app.get('/cr/tomotometer/name/:name', db.getReviewsbyName);
 
-app.get('/cr/topcriticmeter/:id', getTopReviewsbyID);
-app.get('/cr/topcriticmeter/:name', getTopReviewsbyName);
+app.get('/cr/topdozenreviews/ID/:id', db.get12ReviewsbyID);
+app.get('/cr/topdozenreviews/name/:name', db.get12ReviewsbyName);
 
-app.get('/cr/topdozenreviews/:id', get12ReviewsbyID);
-app.get('/cr/topdozenreviews/:name', get12ReviewsbyName);
+app.get('/cr/topcriticmeter/ID/:id', db.getTopReviewsbyID);
+app.get('/cr/topcriticmeter/name/:name', db.getTopReviewsbyName);
 
-app.post('/m/movieinfo', createFilm);
-app.delete('/m/movieinfo/:id', deleteFilmbyID);
-app.delete('/m/movieinfo/:name', deleteFilmbyName);
-app.put('/m/movieinfo/:id', updateFilmbyID);
-app.put('/m/movieinfo/:name', updateFilmbyName);
+app.post('/m/movieinfo', db.createFilm);
+app.delete('/m/movieinfo/ID/:id', db.deleteFilmbyID);
+app.delete('/m/movieinfo/name/:name', db.deleteFilmbyName);
+app.put('/m/movieinfo/ID/:id', db.updateFilmbyID);
+app.put('/m/movieinfo/name/:name', db.updateFilmbyName);
 
-app.post('/cr/criticinfo', createCritic);
-app.delete('/cr/criticinfo/:name', deleteCritic);
-app.put('/cr/criticinfo/:name', updateCritic);
+app.post('/cr/criticinfo', db.createCritic);
+app.delete('/cr/criticinfo/:name', db.deleteCritic);
+app.put('/cr/criticinfo/:name', db.updateCritic);
 
-app.post('/rev/reviewinfo', createReview);
-app.delete('/rev/reviewinfo/:id', deleteReview);
-app.put('/rev/reviewinfo/:id', updateReview);
+app.post('/rev/reviewinfo', db.createReview);
+app.delete('/rev/reviewinfo/:id', db.deleteReview);
+app.put('/rev/reviewinfo/:id', db.updateReview);
 
 app.use('/assets', express_static('./Scoreboard/dist/Scoreboard/assets/'));
 

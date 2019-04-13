@@ -1,11 +1,13 @@
-﻿const fs = require('fs');
+﻿var dbHost = require('./database_env').dbHost;
+var dbPassword = require('./database_env').dbPassword;
+
+const fs = require('fs');
 const path = require('path');
 const { Pool, Client } = require('pg');
 var copyFrom = require('pg-copy-streams').from;
 
 // const text = 'SELECT * FROM movies WHERE _id = 10';
 
-const pgPW = require('./dbAccess');
 var movieInput = path.join(__dirname, './seed/data_generation/movies.csv');
 var criticInput = path.join(__dirname, './seed/data_generation/critics.csv');
 var reviewInput = path.join(__dirname, './seed/data_generation/reviews.csv');
@@ -16,17 +18,17 @@ var reviewTable = 'critic_reviews';
 
 const pool = new Pool({
   user: 'mysdc',
-  host: 'localhost',
+  host: dbHost,
   database: 'scorecard',
-  password: pgPW,
+  password: dbPassword,
   port: 5432,
 })
 
 const client = new Client({
   user: 'mysdc',
-  host: 'localhost',
+  host: dbHost,
   database: 'scorecard',
-  password: pgPW,
+  password: dbPassword,
   port: 5432,
 })
 client.connect()

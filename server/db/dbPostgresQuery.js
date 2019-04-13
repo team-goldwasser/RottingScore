@@ -1,10 +1,13 @@
-﻿const { Pool, Client } = require('pg');
+﻿var dbHost = require('./database_env').dbHost;
+var dbPassword = require('./database_env').dbPassword;
+
+const { Pool, Client } = require('pg');
 
 const pool = new Pool({
   user: 'mysdc',
-  host: 'localhost',
+  host: dbHost,
   database: 'scorecard',
-  password: pgPW,
+  password: dbPassword,
   port: 5432,
 })
 
@@ -19,8 +22,8 @@ const getMovieInfobyID = (request, response) => {
 };
 
 const getMovieInfobyName = (request, response) => {
-  const filmTitle = parseInt(request.params.name);
-  pool.query('SELECT * FROM movies WHERE newTitle = $1', [filmTitle], (error, results) => {
+  const filmTitle = request.params.name;
+  pool.query('SELECT * FROM movies WHERE title = $1', [filmTitle], (error, results) => {
     if (error) {
       throw error
     }
@@ -29,11 +32,12 @@ const getMovieInfobyName = (request, response) => {
 };
 
 const getCriticbyName = (request, response) => {
-  const name = parseInt(request.params.name);
-  pool.query('SELECT * FROM reviews LEFT JOIN critics ON ' +
-    '(reviews.idCrit = critics.idCritic) WHERE critics.name = $1)', [name], (error, results) => {
+  const name = request.params.name;
+  pool.query('SELECT * FROM critic_reviews WHERE critic_id = ' +
+    '(SELECT id FROM critics WHERE name = $1)', [name], (error, results) => {
     if (error) {
-      throw error
+      console.log(results, error);
+      throw error;
     }
     response.status(200).json(results.rows)
   })
@@ -41,7 +45,7 @@ const getCriticbyName = (request, response) => {
 
 const getReviewsbyID = (request, response) => {
   const id = parseInt(request.params.id);
-  pool.query('SELECT * FROM reviews WHERE idFilm = $1', [id], (error, results) => {
+  pool.query('SELECT * FROM critic_reviews WHERE movie_id = $1', [id], (error, results) => {
     if (error) {
       throw error
     }
@@ -50,9 +54,9 @@ const getReviewsbyID = (request, response) => {
 };
 
 const getReviewsbyName = (request, response) => {
-  const filmName = parseInt(request.params.name);
-  pool.query('SELECT * FROM reviews LEFT JOIN movies ON ' +
-    '(reviews.idFilm = movies.newTitle) WHERE movies.newTitle = $1 )', [filmName], (error, results) => {
+  const filmName = request.params.name;
+  pool.query('SELECT * FROM critic_reviews WHERE movie_id = ' +
+    '(SELECT id FROM movies WHERE title = $1)', [filmName], (error, results) => {
     if (error) {
       throw error
     }
@@ -62,7 +66,7 @@ const getReviewsbyName = (request, response) => {
 
 const get12ReviewsbyID = (request, response) => {
   const id = parseInt(request.params.id);
-  pool.query('SELECT * FROM reviews WHERE idFilm = $1 LIMIT 12', [id], (error, results) => {
+  pool.query('SELECT * FROM critic_reviews WHERE movie_id = $1 LIMIT 12', [id], (error, results) => {
     if (error) {
       throw error
     }
@@ -71,9 +75,9 @@ const get12ReviewsbyID = (request, response) => {
 };
 
 const get12ReviewsbyName = (request, response) => {
-  const filmName = parseInt(request.params.name);
-  pool.query('SELECT * FROM reviews LEFT JOIN movies ON ' +
-    '(reviews.idFilm = movies.newTitle) WHERE movies.newTitle = $1 LIMIT 12)', [filmName], (error, results) => {
+  const filmName = request.params.name;
+  pool.query('(SELECT * FROM critic_reviews WHERE movie_id = ' +
+  '(SELECT id FROM movies WHERE title = $1)) LIMIT 12', [filmName], (error, results) => {
     if (error) {
       throw error
     }
@@ -83,9 +87,11 @@ const get12ReviewsbyName = (request, response) => {
 
 const getTopReviewsbyID = (request, response) => {
   const id = parseInt(request.params.id);
-  pool.query('SELECT * FROM reviews WHERE idFilm = $1 LEFT JOIN critics ON ' +
-    '(reviews.idCrit = critics.idCritic) WHERE critics.topCritic = $2 )', [id, 1], (error, results) => {
+  const topC = 1;
+  pool.query('SELECT * FROM critic_reviews JOIN critics ON (critic_reviews.critic_id = critics.id) ' +
+    'WHERE critics.top_Critic = 1 AND critic_reviews.movie_id = $1', [id], (error, results) => {
     if (error) {
+      console.log(error);
       throw error
     }
     response.status(200).json(results.rows)
@@ -93,9 +99,10 @@ const getTopReviewsbyID = (request, response) => {
 };
 
 const getTopReviewsbyName = (request, response) => {
-  const filmName = parseInt(request.params.name);
-  pool.query('SELECT * FROM reviews WHERE newTitle = $1 LEFT JOIN critics ON ' +
-    '(reviews.idCrit = critics.idCritic) WHERE critics.topCritic = $2 )', [filmName, 1], (error, results) => {
+  const filmName = request.params.name;
+  pool.query('SELECT * FROM critic_reviews JOIN critics ON (critic_reviews.critic_id = critics.id) ' +
+  'WHERE critics.top_Critic = 1 AND critic_reviews.movie_id = (SELECT id FROM movies WHERE title = $1)',
+  [filmName], (error, results) => {
     if (error) {
       throw error
     }
@@ -104,7 +111,7 @@ const getTopReviewsbyName = (request, response) => {
 };
 
 const createFilm = (request, response) => {
-  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.body
+  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.body;
   pool.query('INSERT INTO movies (newTitle, newTitleURL, newPoster, newBackdrop) ' +
     'VALUES ($1, $2, $3, $4)', [newTitle, newTitleURL, newPoster, newBackdrop],
     (error, results) => {
@@ -117,8 +124,7 @@ const createFilm = (request, response) => {
 
 const updateFilmbyID = (request, response) => {
   const id = parseInt(request.params.id)
-  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.body
-
+  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.body;
   pool.query(
     'UPDATE movies SET newTitle = $2, newTitleURL = $3, newPoster = $4, newBackdrop = $5 ' +
       'WHERE newID = $1',
@@ -133,9 +139,8 @@ const updateFilmbyID = (request, response) => {
 }
 
 const updateFilmbyName = (request, response) => {
-  const filmName = parseInt(request.params.name)
-  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.body
-
+  const filmName = request.params.name;
+  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.body;
   pool.query(
     'UPDATE movies SET newTitle = $2, newTitleURL = $3, newPoster = $4, newBackdrop = $5 ' +
       'WHERE newTitle = $1',
@@ -150,8 +155,7 @@ const updateFilmbyName = (request, response) => {
 }
 
 const deleteFilmbyID = (request, response) => {
-  const id = parseInt(request.params.id)
-
+  const id = parseInt(request.params.id);
   pool.query('DELETE * FROM movies WHERE newID = $1', [id], (error, results) => {
     if (error) {
       throw error
@@ -161,8 +165,7 @@ const deleteFilmbyID = (request, response) => {
 }
 
 const deleteFilmbyName = (request, response) => {
-  const filmName = parseInt(request.params.name)
-
+  const filmName = request.params.name;
   pool.query('DELETE * FROM movies WHERE newTitle = $1', [filmName], (error, results) => {
     if (error) {
       throw error
@@ -172,7 +175,7 @@ const deleteFilmbyName = (request, response) => {
 }
 
 const createCritic = (request, response) => {
-  const { topCritic, name, newImage, org } = request.body
+  const { topCritic, name, newImage, org } = request.body;
   pool.query('INSERT INTO critics (topCritic, name, newImage, org) ' +
     'VALUES ($1, $2, $3, $4)', [topCritic, name, newImage, org],
     (error, results) => {
@@ -184,9 +187,8 @@ const createCritic = (request, response) => {
 }
 
 const updateCritic = (request, response) => {
-  const nameCritic = parseInt(request.params.name)
-  const { topCritic, name, newImage, org } = request.body
-
+  const nameCritic = request.params.name;
+  const { topCritic, name, newImage, org } = request.body;
   pool.query(
     'UPDATE critics SET topCritic = $2, name = $3, newImage = $4, org = $5' +
       'WHERE name = $1',
@@ -201,8 +203,7 @@ const updateCritic = (request, response) => {
 }
 
 const deleteCritic = (request, response) => {
-  const nameCritic = parseInt(request.params.name)
-
+  const nameCritic = request.params.name;
   pool.query('DELETE FROM critics WHERE name = $1', [nameCritic], (error, results) => {
     if (error) {
       throw error
@@ -212,8 +213,8 @@ const deleteCritic = (request, response) => {
 }
 
 const createReview = (request, response) => {
-  const { newDate, fresh, reviewText, idFilm, idCrit, rating } = request.body
-  pool.query('INSERT INTO reviews (newDate, fresh, reviewText, idFilm, idCrit, rating) ' +
+  const { newDate, fresh, reviewText, idFilm, idCrit, rating } = request.body;
+  pool.query('INSERT INTO critic_reviews (newDate, fresh, reviewText, idFilm, idCrit, rating) ' +
     'VALUES ($1, $2, $3, $4, $5, $6)', [newDate, fresh, reviewText, idFilm, idCrit, rating],
     (error, results) => {
       if (error) {
@@ -224,11 +225,10 @@ const createReview = (request, response) => {
 }
 
 const updateReview = (request, response) => {
-  const reviewID = parseInt(request.params.id)
+  const reviewID = parseInt(request.params.id);
   const { newDate, fresh, reviewText, idFilm, idCrit, rating } = request.body
-
   pool.query(
-    'UPDATE reviews SET newDate = $2, fresh = $3, reviewText = $4, idFilm = $5, idCrit = $6, ' +
+    'UPDATE critic_reviews SET newDate = $2, fresh = $3, reviewText = $4, idFilm = $5, idCrit = $6, ' +
       'rating = $7 WHERE reviewID = $1',
     [reviewID, newDate, fresh, reviewText, idFilm, idCrit, rating],
     (error, results) => {
@@ -241,9 +241,8 @@ const updateReview = (request, response) => {
 }
 
 const deleteReview = (request, response) => {
-  const reviewID = parseInt(request.params.id)
-
-  pool.query('DELETE FROM reviews WHERE reviewID = $1', [reviewID], (error, results) => {
+  const reviewID = parseInt(request.params.id);
+  pool.query('DELETE FROM critic_reviews WHERE reviewID = $1', [reviewID], (error, results) => {
     if (error) {
       throw error
     }
