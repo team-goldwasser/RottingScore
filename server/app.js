@@ -23,16 +23,16 @@ app.get('/cr/topcriticmeter/name/:name', db.getTopReviewsbyName);
 app.post('/m/movieinfo', db.createFilm);
 app.delete('/m/movieinfo/ID/:id', db.deleteFilmbyID);
 app.delete('/m/movieinfo/name/:name', db.deleteFilmbyName);
-app.put('/m/movieinfo/ID/:id', db.updateFilmbyID);
-app.put('/m/movieinfo/name/:name', db.updateFilmbyName);
+app.put('/m/movieinfo/ID', db.updateFilmbyID);
+app.put('/m/movieinfo/name', db.updateFilmbyName);
 
 app.post('/cr/criticinfo', db.createCritic);
 app.delete('/cr/criticinfo/:name', db.deleteCritic);
-app.put('/cr/criticinfo/:name', db.updateCritic);
+app.put('/cr/criticinfo/name', db.updateCritic);
 
 app.post('/rev/reviewinfo', db.createReview);
 app.delete('/rev/reviewinfo/:id', db.deleteReview);
-app.put('/rev/reviewinfo/:id', db.updateReview);
+app.put('/rev/reviewinfo/ID', db.updateReview);
 
 app.use('/assets', express_static('./Scoreboard/dist/Scoreboard/assets/'));
 

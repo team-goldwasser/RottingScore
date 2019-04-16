@@ -111,142 +111,147 @@ const getTopReviewsbyName = (request, response) => {
 };
 
 const createFilm = (request, response) => {
-  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.body;
-  pool.query('INSERT INTO movies (newTitle, newTitleURL, newPoster, newBackdrop) ' +
-    'VALUES ($1, $2, $3, $4)', [newTitle, newTitleURL, newPoster, newBackdrop],
+  const { newID, newTitle, newTitleURL, newPoster, newBackdrop } = request.query;
+  pool.query('INSERT INTO movies (id, title, title_url, tmdb_poster_path, tmdb_backdrop_path) ' +
+    'VALUES ($1, $2, $3, $4, $5) RETURNING *', [newID, newTitle, newTitleURL, newPoster, newBackdrop],
     (error, results) => {
       if (error) {
         throw error
     }
-    response.status(201).send(`${results.newTitle} has been added to film database!`)
+    response.status(201).send(`${results.rows[0]['title']} has been added to film database!`)
   })
 }
 
 const updateFilmbyID = (request, response) => {
-  const id = parseInt(request.params.id)
-  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.body;
+  const id = parseInt(request.query.id);
+  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.query;
   pool.query(
-    'UPDATE movies SET newTitle = $2, newTitleURL = $3, newPoster = $4, newBackdrop = $5 ' +
-      'WHERE newID = $1',
+    'UPDATE movies SET title = $2, title_url = $3, tmdb_poster_path = $4, tmdb_backdrop_path = $5 ' +
+      'WHERE id = $1 RETURNING *',
     [id, newTitle, newTitleURL, newPoster, newBackdrop],
     (error, results) => {
       if (error) {
         throw error
       }
-      response.status(200).send(`${results.newTitle} has been modified.`)
+      response.status(200).send(`${results.rows[0]['title']} has been modified.`)
     }
   )
 }
 
 const updateFilmbyName = (request, response) => {
-  const filmName = request.params.name;
-  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.body;
+  var filmName = request.query.newTitle;
+  var titleChange = request.query.altTitle;
+  const { newTitleURL, newPoster, newBackdrop} = request.query;
+  if (!titleChange) titleChange = filmName;
   pool.query(
-    'UPDATE movies SET newTitle = $2, newTitleURL = $3, newPoster = $4, newBackdrop = $5 ' +
-      'WHERE newTitle = $1',
-    [filmName, newTitle, newTitleURL, newPoster, newBackdrop],
+    'UPDATE movies SET title = $2, title_url = $3, tmdb_poster_path = $4, tmdb_backdrop_path = $5 ' +
+      'WHERE title = $1 RETURNING *',
+    [filmName, titleChange, newTitleURL, newPoster, newBackdrop],
     (error, results) => {
       if (error) {
         throw error
       }
-      response.status(200).send(`${results.newTitle} has been modified.`)
+      console.log(results.rows);
+      response.status(200).send(`${results.rows[0]['title']} has been modified.`)
     }
   )
 }
 
 const deleteFilmbyID = (request, response) => {
   const id = parseInt(request.params.id);
-  pool.query('DELETE * FROM movies WHERE newID = $1', [id], (error, results) => {
+  pool.query('DELETE FROM movies WHERE id = $1 RETURNING *', [id], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(200).send(`${results.newTitle} has been deleted from film database!`)
+    response.status(200).send(`${results.rows[0]['title']} has been deleted from film database!`);
   })
 }
 
 const deleteFilmbyName = (request, response) => {
   const filmName = request.params.name;
-  pool.query('DELETE * FROM movies WHERE newTitle = $1', [filmName], (error, results) => {
+  pool.query('DELETE FROM movies WHERE title = $1 RETURNING *', [filmName], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(200).send(`${results.newTitle} has been deleted from film database!`)
+    response.status(200).send(`${results.rows[0]['title']} has been deleted from film database!`);
   })
 }
 
 const createCritic = (request, response) => {
-  const { topCritic, name, newImage, org } = request.body;
-  pool.query('INSERT INTO critics (topCritic, name, newImage, org) ' +
-    'VALUES ($1, $2, $3, $4)', [topCritic, name, newImage, org],
+  const { topCritic, name, newImage, org } = request.query;
+  pool.query('INSERT INTO critics (top_critic, name, img_url, organization) ' +
+    'VALUES ($1, $2, $3, $4) RETURNING *', [topCritic, name, newImage, org],
     (error, results) => {
       if (error) {
         throw error
     }
-    response.status(201).send(`${results.name} has been added to critics database!`)
+    response.status(201).send(`${results.rows[0]['name']} has been added to critics database!`)
   })
 }
 
 const updateCritic = (request, response) => {
-  const nameCritic = request.params.name;
-  const { topCritic, name, newImage, org } = request.body;
+  const nameCritic = request.query.name;
+  var nameChange = request.query.alias;
+  const { topCritic, newImage, org } = request.query;
+  if (!nameChange) nameChange = nameCritic;
   pool.query(
-    'UPDATE critics SET topCritic = $2, name = $3, newImage = $4, org = $5' +
-      'WHERE name = $1',
-    [nameCritic, topCritic, name, newImage, org],
+    'UPDATE critics SET name = $2, top_critic = $3, img_url = $4, organization = $5' +
+      'WHERE name = $1 RETURNING *',
+    [nameCritic, nameChange, topCritic, newImage, org],
     (error, results) => {
       if (error) {
         throw error
       }
-      response.status(200).send(`${results.name}'s profile has been modified.`)
+      response.status(200).send(`${results.rows[0]['name']}'s profile has been modified.`)
     }
   )
 }
 
 const deleteCritic = (request, response) => {
   const nameCritic = request.params.name;
-  pool.query('DELETE FROM critics WHERE name = $1', [nameCritic], (error, results) => {
+  pool.query('DELETE FROM critics WHERE name = $1 RETURNING *', [nameCritic], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(200).send(`${results.name} has been deleted.`)
+    response.status(200).send(`${results.rows[0]['name']} has been deleted.`)
   })
 }
 
 const createReview = (request, response) => {
-  const { newDate, fresh, reviewText, idFilm, idCrit, rating } = request.body;
-  pool.query('INSERT INTO critic_reviews (newDate, fresh, reviewText, idFilm, idCrit, rating) ' +
-    'VALUES ($1, $2, $3, $4, $5, $6)', [newDate, fresh, reviewText, idFilm, idCrit, rating],
+  const { newDate, fresh, reviewText, idFilm, idCrit, rating } = request.query;
+  pool.query('INSERT INTO critic_reviews (review_date, fresh, review_text, movie_id, critic_id, score) ' +
+    'VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [newDate, fresh, reviewText, idFilm, idCrit, rating],
     (error, results) => {
       if (error) {
         throw error
     }
-    response.status(201).send(`Review added for ${results.newTitle}`)
+    response.status(201).send(`New review added!`)
   })
 }
 
 const updateReview = (request, response) => {
-  const reviewID = parseInt(request.params.id);
-  const { newDate, fresh, reviewText, idFilm, idCrit, rating } = request.body
+  const reviewID = parseInt(request.query.id);
+  const { newDate, fresh, reviewText, idFilm, idCrit, rating } = request.query;
   pool.query(
-    'UPDATE critic_reviews SET newDate = $2, fresh = $3, reviewText = $4, idFilm = $5, idCrit = $6, ' +
-      'rating = $7 WHERE reviewID = $1',
+    'UPDATE critic_reviews SET review_date = $2, fresh = $3, review_text = $4, movie_id = $5, critic_id = $6, ' +
+      'score = $7 WHERE id = $1 RETURNING *',
     [reviewID, newDate, fresh, reviewText, idFilm, idCrit, rating],
     (error, results) => {
       if (error) {
         throw error
       }
-      response.status(200).send(`${results.newTitle} review modified`)
+      response.status(200).send(`Review has been modified!`)
     }
   )
 }
 
 const deleteReview = (request, response) => {
   const reviewID = parseInt(request.params.id);
-  pool.query('DELETE FROM critic_reviews WHERE reviewID = $1', [reviewID], (error, results) => {
+  pool.query('DELETE FROM critic_reviews WHERE id = $1 RETURNING *', [reviewID], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(200).send(`${results.newTitle} review deleted`)
+    response.status(200).send(`Review has been deleted!`)
   })
 }
 
