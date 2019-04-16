@@ -43,6 +43,16 @@ const getCriticbyName = (request, response) => {
   })
 };
 
+const getReviewInfobyID = (request, response) => {
+  const id = parseInt(request.params.id);
+  pool.query('SELECT * FROM critic_reviews WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+};
+
 const getReviewsbyID = (request, response) => {
   const id = parseInt(request.params.id);
   pool.query('SELECT * FROM critic_reviews WHERE movie_id = $1', [id], (error, results) => {
@@ -259,6 +269,7 @@ module.exports = {
   getMovieInfobyID,
   getMovieInfobyName,
   getCriticbyName,
+  getReviewInfobyID,
   getReviewsbyID,
   getReviewsbyName,
   getTopReviewsbyName,

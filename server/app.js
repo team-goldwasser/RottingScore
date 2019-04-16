@@ -11,6 +11,8 @@ app.get('/m/movieinfo/name/:name', db.getMovieInfobyName);
 
 app.get('/cr/criticinfo/:name', db.getCriticbyName);
 
+app.get('/rev/reviewinfo/ID/:id', db.getReviewInfobyID);
+
 app.get('/cr/tomotometer/ID/:id', db.getReviewsbyID);
 app.get('/cr/tomotometer/name/:name', db.getReviewsbyName);
 
