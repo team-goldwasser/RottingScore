@@ -3,15 +3,17 @@ var dbHost = require('./database_env').dbHost;
 var dbPassword = require('./database_env').dbPassword;
 
 var knex = require('knex')({
-  client: 'mysql',
-  version: '5.7',
+  client: 'pg',
+  version: '7.9.0',
   connection: {
     host: dbHost,
     port: 3306,
-    user: 'root',
+    user: 'mysdc',
     password: dbPassword,
+    database: 'scorecard',
     multipleStatements: true
-  }
+  },
+  pool: { min: 0, max: 7 }
 });
 
 //Any review greater than this will be considered fresh
