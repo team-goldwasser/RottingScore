@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 if (process.env.NODE_ENV === 'travis') {
   dbPassword = '';
 } else {
-  dbPassword = 'password'
+  dbPassword = 'goldwasser'
 }
 
 module.exports={

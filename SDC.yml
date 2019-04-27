@@ -1,0 +1,19 @@
+﻿config:
+  target: 'http://localhost:9001'
+  http:
+    pool: 5
+  config.http.maxSockets: 5
+  phases:
+    - duration: 120
+      arrivalRate: 750
+  processor: "./sdcStressData.js"
+scenarios:
+  - flow:
+    - function: 'generateReview'
+    # - get:
+    #     url: "/rev/reviewinfo/ID/"
+    #     qs: {{$randomNumber(1,25000000)}}
+    - post:
+        url: "/rev/reviewinfo?{{ freshRev }}"
+        # qs: "{{ freshRev }}"
+        # beforeRequest: 'generateReview'
