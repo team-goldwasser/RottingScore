@@ -163,7 +163,7 @@ function generateFlac(criticTotal, criticSets, total) {
         generateCritic(dwindle, criticSets, total);
       } else {
         console.log('Critics data saved!');
-        var reTotal = total * 50;
+        var reTotal = total * 10;
         generateReview(reTotal, 0, total);
       }
     }
@@ -188,11 +188,11 @@ function generateClack(reviewCount, reviewSets, total) {
     var newReview = {
       newDate: revDate,
       fresh: Math.floor(Math.random() * 2),
-      reviewText: faker.lorem.paragraphs(paragraphCount [1]),
-      idFilm: Math.floor((1 - Math.random()) * total),
-      idCrit: Math.floor((1 - Math.random()) * (total / 2)),
-      rating: Math.floor(Math.random() * 10) + (Math.floor(Math.random() * 10) / 100),
+      reviewText: faker.lorem.paragraph(),
       reviewURL: faker.internet.url(),
+      idFilm: Math.floor((Math.random() * total) + 1),
+      idCrit: Math.floor((Math.random() * (total / 2)) + 1),
+      rating: Math.floor(Math.random() * 10) + (Math.floor(Math.random() * 10) / 100),
     };
     reviewData.push(newReview);
     newReview = null;

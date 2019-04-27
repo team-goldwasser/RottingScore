@@ -1,3 +1,3 @@
 ﻿const generateData = require('./data_creation.js');
 
-generateData(500000);
+generateData(1000000);
