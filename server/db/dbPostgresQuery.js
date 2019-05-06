@@ -130,9 +130,9 @@ const getTopReviewsbyName = (request, response) => {
 };
 
 const createFilm = (request, response) => {
-  const { newID, newTitle, newTitleURL, newPoster, newBackdrop } = request.query;
-  pool.query('INSERT INTO movies (id, title, title_url, tmdb_poster_path, tmdb_backdrop_path) ' +
-    'VALUES ($1, $2, $3, $4, $5) RETURNING *', [newID, newTitle, newTitleURL, newPoster, newBackdrop],
+  const { newTitle, newTitleURL, newPoster, newBackdrop } = request.query;
+  pool.query('INSERT INTO movies (title, title_url, tmdb_poster_path, tmdb_backdrop_path) ' +
+    'VALUES ($1, $2, $3, $4) RETURNING *', [newTitle, newTitleURL, newPoster, newBackdrop],
     (error, results) => {
       if (error) {
         throw error
