@@ -37,6 +37,6 @@ app.delete('/rev/reviewinfo/:id', db.deleteReview);
 app.put('/rev/reviewinfo/ID', db.updateReview);
 
 app.use('/assets', express_static('./Scoreboard/dist/Scoreboard/assets/'));
-
+app.use('/', express_static('./Scoreboard/dist/Scoreboard/assets/'));
 
 module.exports = app;
