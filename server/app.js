@@ -38,6 +38,8 @@ app.put('/rev/reviewinfo/ID', db.updateReview);
 
 app.use('/assets', express_static(path.join(__dirname, 'Scoreboard/dist/Scoreboard/assets/')));
 app.use('/', express_static(path.join(__dirname, 'Scoreboard/dist/Scoreboard/assets/')));
+app.use('/loaderio-f742813797388b508be081351a826da0/', express_static(path.join(__dirname, 'Scoreboard/dist/Scoreboard/assets/')));
+app.use('/loaderio-f742813797388b508be081351a826da0.txt', express_static(path.join(__dirname, 'Scoreboard/dist/Scoreboard/assets/')));
 app.use(express_static(path.join(__dirname, 'Scoreboard/dist/Scoreboard/assets/')));
 
 module.exports = app;
