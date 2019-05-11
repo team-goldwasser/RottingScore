@@ -7,7 +7,7 @@ const cors = require('cors');
 app.use(cors());
 
 app.get('/loaderio-f742813797388b508be081351a826da0', function (req, res) {
-  res.sendFile('./Scoreboard/dist/Scoreboard/assets/loaderio-f742813797388b508be081351a826da0.txt');
+  res.download('./Scoreboard/dist/Scoreboard/assets/loaderio-f742813797388b508be081351a826da0.txt');
 });
 
 app.get('/m/movieinfo/ID/:id', db.getMovieInfobyID);
